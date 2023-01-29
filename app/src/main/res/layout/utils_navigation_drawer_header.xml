@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/profileImageMenuHeader"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/person_icon" />
+
+
+    <TextView
+        android:id="@+id/nameMenuHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profileImageMenuHeader"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:text="Placeholder Name"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/emailMenuHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameMenuHeader"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:text="Placeholder Email"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/isManagerMenuHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailMenuHeader"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:text="Placeholder Is Manager"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
+
+
+    <View
+        android:id="@+id/view"
+        style="@style/line"
+        android:layout_width="match_parent"
+        android:layout_below="@id/isManagerMenuHeader" />
+
+</RelativeLayout>

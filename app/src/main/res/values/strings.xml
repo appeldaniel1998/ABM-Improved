@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ABM-Improved</string>
+    <string name="openNavDrawer">Open Navigation Drawer</string>
+    <string name="closeNavDrawer">Close Navigation Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

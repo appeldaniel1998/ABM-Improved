@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "326339239430",
+    "project_id": "abm-improved",
+    "storage_bucket": "abm-improved.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326339239430:android:20fa17b10e8cc366e8ed87",
+        "android_client_info": {
+          "package_name": "com.example.abm_improved"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326339239430-je21ln2oaum0qgpcf9u79np5e9a6bfra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.abm_improved",
+            "certificate_hash": "9ec3c9e0d0aedd265fff8cd0d4883769c3cdd66c"
+          }
+        },
+        {
+          "client_id": "326339239430-uq2ade0shr54c31hmqe5lqeh383hjb81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf2XCelQQaILwxIw3WzxmWIzNpaE0cPQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326339239430-uq2ade0shr54c31hmqe5lqeh383hjb81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

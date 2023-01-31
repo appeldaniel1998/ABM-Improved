@@ -96,7 +96,7 @@ public class RegisterFragment extends BaseFragment {
                 String userUID = user.getUid();//get user ID
 
                 Client userToAdd = new Client(textFirstName, textLastName, textEmail, textPhoneNumber, textAddress, textBirthdayDate, userUID); //creating a new user
-                LoginDatabaseUtils.addClientToFirebase(userToAdd, userUID, requireActivity());//add the user to the database
+                LoginDatabaseUtils.addClientToFirebase(userToAdd, requireActivity());//add the user to the database
 
                 if (profilePicSelected) {
                     LoginDatabaseUtils.uploadImageToFirebase(super.getStorageReference(), userUID, profilePicUri, requireActivity());

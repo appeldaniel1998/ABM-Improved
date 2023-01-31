@@ -18,8 +18,8 @@ import androidx.annotation.NonNull;
 
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
-import com.example.abm_improved.Client;
-import com.example.abm_improved.DatePicker;
+import com.example.abm_improved.DataClasses.Client;
+import com.example.abm_improved.Utils.DatePicker;
 import com.example.abm_improved.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

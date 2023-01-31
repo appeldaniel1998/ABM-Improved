@@ -1,4 +1,4 @@
-package com.example.abm_improved;
+package com.example.abm_improved.DataClasses;
 
 public class Client {
     private String firstName;

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Client;
+import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.DatePicker;
 import com.example.abm_improved.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -96,10 +97,10 @@ public class RegisterFragment extends BaseFragment {
                 String userUID = user.getUid();//get user ID
 
                 Client userToAdd = new Client(textFirstName, textLastName, textEmail, textPhoneNumber, textAddress, textBirthdayDate, userUID); //creating a new user
-                LoginDatabaseUtils.addClientToFirebase(userToAdd, requireActivity());//add the user to the database
+                DatabaseUtils.addClientToFirebase(userToAdd, requireActivity());//add the user to the database
 
                 if (profilePicSelected) {
-                    LoginDatabaseUtils.uploadImageToFirebase(super.getStorageReference(), userUID, profilePicUri, requireActivity());
+                    DatabaseUtils.uploadImageToFirebase(super.getStorageReference(), userUID, profilePicUri, requireActivity());
                 }
 
                 //upon success, move to appointments main activity

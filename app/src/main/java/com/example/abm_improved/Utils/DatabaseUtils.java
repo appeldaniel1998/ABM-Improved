@@ -1,4 +1,4 @@
-package com.example.abm_improved.LoginAndRegister;
+package com.example.abm_improved.Utils;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,11 +8,12 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.abm_improved.DataClasses.Client;
+import com.example.abm_improved.LoginAndRegister.LoginFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 
-public class LoginDatabaseUtils {
+public class DatabaseUtils {
     private static final String TAG = "LoginDatabaseUtils";
 
     private static FirebaseAuth auth = FirebaseAuth.getInstance();

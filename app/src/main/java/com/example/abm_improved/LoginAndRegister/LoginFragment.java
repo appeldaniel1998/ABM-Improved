@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
+import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.R;
 
 public class LoginFragment extends BaseFragment {
@@ -37,7 +36,7 @@ public class LoginFragment extends BaseFragment {
             if (emailStr.isEmpty()) emailStr = "";
             String passwordStr = passwordEditText.getText().toString();
             if (passwordStr.isEmpty()) passwordStr = "";
-            LoginDatabaseUtils.loginUser(emailStr, passwordStr, LoginFragment.this);
+            DatabaseUtils.loginUser(emailStr, passwordStr, LoginFragment.this);
         });
 
         //Register button onclick listener

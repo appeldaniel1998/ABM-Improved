@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -29,6 +30,7 @@ public class LoginFragment extends BaseFragment {
         Button registerButton = view.findViewById(R.id.registerButton);
         EditText emailEditText = view.findViewById(R.id.emailEditText);
         EditText passwordEditText = view.findViewById(R.id.passwordEditText);
+        requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.GONE);
 
         //Login button onclick listener
         loginButton.setOnClickListener(v -> {

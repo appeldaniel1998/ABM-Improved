@@ -56,6 +56,7 @@ public class RegisterFragment extends BaseFragment {
         initFields(view);
 
         requireActivity().setTitle("Register New User");
+        requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.GONE);
         auth = super.getAuth();
         datePickerDialog = DatePicker.initDatePicker(birthdayTextView, requireActivity());
         birthdayTextView.setText(DatePicker.getTodayDate()); // Set initial date to today's date

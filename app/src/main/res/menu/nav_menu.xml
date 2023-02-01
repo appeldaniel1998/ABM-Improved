@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <item android:title="App1"
+
+    <item android:title="Appointments"
         android:id="@+id/menuItemAppointments"
-        />
-    <item android:title="App2"
+        android:icon="@drawable/calendar"/>
+    <item android:title="Appointment Types"
         android:id="@+id/menuItemAppointmentTypes"
-        />
+        android:icon="@drawable/calendar"/>
+    <item android:title="Products"
+        android:id="@+id/menuItemProducts"
+        android:icon="@drawable/products"/>
+    <item android:title="Clients"
+        android:id="@+id/menuItemClients"
+        android:icon="@drawable/person_icon"/>
+    <item android:title="Analytics"
+        android:id="@+id/menuItemAnalytics"
+        android:icon="@drawable/analytics_icon"/>
+    <item android:title="Cart"
+        android:id="@+id/menuItemCart"
+        android:icon="@drawable/shopping_cart"/>
+    <item android:title="Sign Out"
+        android:id="@+id/menuItemSignOut"
+        android:icon="@drawable/login"/>
 
 </menu>

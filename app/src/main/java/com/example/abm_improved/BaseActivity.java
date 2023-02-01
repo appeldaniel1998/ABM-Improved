@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -16,9 +17,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.abm_improved.AppointmentTypes.AppointmentTypesMainFragment;
+import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.Cart.CartMainFragment;
+import com.example.abm_improved.Clients.ClientsMainFragment;
+import com.example.abm_improved.HistoryAnalytics.HistoryFragment;
 import com.example.abm_improved.LoginAndRegister.LoginFragment;
 import com.example.abm_improved.LoginAndRegister.RegisterFragment;
+import com.example.abm_improved.Products.ProductsMainFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RegisterFragment.OnChooseProfilePicListener {
     private Toolbar toolbar;
@@ -27,6 +35,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     private ImageView selectedImageAddEditDataFragment;
     private ActivityResultLauncher<Intent> filePicker;
+
+    private DrawerLayout drawerLayout;
 
 
     @Override
@@ -63,7 +73,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     public void initMenuSideBar() {
         toolbar = findViewById(R.id.toolbar); // init toolbar
         setSupportActionBar(toolbar);
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openNavDrawer, R.string.closeNavDrawer);
@@ -76,7 +86,57 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     @Override
     // Menu selection
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        drawerLayout.closeDrawers(); // close nav drawer
+        if (item.getItemId() == R.id.menuItemAppointments) {
+            Bundle bundle = new Bundle();
+            AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
+            appointmentsMainFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+            return true;
+        } else if (item.getItemId() == R.id.menuItemAppointmentTypes) {
+            Bundle bundle = new Bundle();
+            AppointmentTypesMainFragment appointmentTypesMainFragment = new AppointmentTypesMainFragment();
+            appointmentTypesMainFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentTypesMainFragment).addToBackStack(null).commit();
+            return true;
+        } else if (item.getItemId() == R.id.menuItemProducts) {
+            Bundle bundle = new Bundle();
+            ProductsMainFragment productsMainFragment = new ProductsMainFragment();
+            productsMainFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, productsMainFragment).addToBackStack(null).commit();
+            return true;
+        } else if (item.getItemId() == R.id.menuItemClients) {
+            Bundle bundle = new Bundle();
+            ClientsMainFragment clientsMainFragment = new ClientsMainFragment();
+            clientsMainFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, clientsMainFragment).addToBackStack(null).commit();
+            return true;
+        } else if (item.getItemId() == R.id.menuItemAnalytics) {
+            Bundle bundle = new Bundle();
+            HistoryFragment historyFragment = new HistoryFragment();
+            historyFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).addToBackStack(null).commit();
+            return true;
+        } else if (item.getItemId() == R.id.menuItemCart) {
+            Bundle bundle = new Bundle();
+            CartMainFragment cartMainFragment = new CartMainFragment();
+            cartMainFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, cartMainFragment).addToBackStack(null).commit();
+            return true;
+        } else if (item.getItemId() == R.id.menuItemSignOut) {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            auth.signOut();
+            if (auth.getCurrentUser() == null) {
+                Toast.makeText(this, "User Signed Out!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "User Signed Out Failed!", Toast.LENGTH_SHORT).show();
+            }
+            Bundle bundle = new Bundle();
+            LoginFragment loginFragment = new LoginFragment();
+            loginFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).addToBackStack(null).commit();
+            return true;
+        } else return false;
     }
 
     @Override

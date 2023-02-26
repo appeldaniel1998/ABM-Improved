@@ -1,13 +1,16 @@
 package com.example.abm_improved.LoginAndRegister;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -15,48 +18,67 @@ import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.R;
+import com.example.abm_improved.Utils.OnFinishQueryInterface;
 
 public class LoginFragment extends BaseFragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-
-        requireActivity().setTitle("Login");
-
-        // basic XML fields
-        Button loginButton = view.findViewById(R.id.loginButton);
-        Button registerButton = view.findViewById(R.id.registerButton);
-        EditText emailEditText = view.findViewById(R.id.emailEditText);
-        EditText passwordEditText = view.findViewById(R.id.passwordEditText);
-        requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.GONE);
-
-        //Login button onclick listener
-        loginButton.setOnClickListener(v -> {
-            String emailStr = emailEditText.getText().toString();
-            if (emailStr.isEmpty()) emailStr = "";
-            String passwordStr = passwordEditText.getText().toString();
-            if (passwordStr.isEmpty()) passwordStr = "";
-            DatabaseUtils.loginUser(emailStr, passwordStr, LoginFragment.this);
-        });
-
-        //Register button onclick listener
-        registerButton.setOnClickListener(v -> {
+        if (DatabaseUtils.userLoggedIn()) { // if user is already logged in, move to appointments main activity
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, new RegisterFragment());
+            fragmentTransaction.replace(R.id.fragment_container, new AppointmentsMainFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        });
+        } else { // if user is not logged in, show login screen
+            requireActivity().setTitle("Login");
+
+            // Basic XML fields
+            Button loginButton = view.findViewById(R.id.loginButton);
+            Button registerButton = view.findViewById(R.id.registerButton);
+            EditText emailEditText = view.findViewById(R.id.emailEditText);
+            EditText passwordEditText = view.findViewById(R.id.passwordEditText);
+            requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.GONE);
+
+            //Login button onclick listener
+            loginButton.setOnClickListener(v -> {
+                String emailStr = emailEditText.getText().toString();
+                String passwordStr = passwordEditText.getText().toString();
+                if (emailStr.isEmpty() || passwordStr.isEmpty()) {
+                    Toast.makeText(requireActivity(), "Fill in all both email and password fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    DatabaseUtils.loginUser(emailStr, passwordStr, LoginFragment.this, new onUserLoggedIn());
+                }
+            });
+
+            //Register button onclick listener
+            registerButton.setOnClickListener(v -> {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, new RegisterFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            });
+        }
         return view;
     }
 
-    public void userLoggedIn() {
-        //upon success, move to appointments main activity
-        Bundle bundle = new Bundle();
-        AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
-        appointmentsMainFragment.setArguments(bundle);
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+    @Override
+    public void onPause() {
+        super.onPause();
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
+    }
+
+    private class onUserLoggedIn implements OnFinishQueryInterface {
+        @Override
+        public void onFinishQuery() {
+            //upon success, move to appointments main activity
+            Bundle bundle = new Bundle();
+            AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
+            appointmentsMainFragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+        }
     }
 }

@@ -1,66 +1,76 @@
 package com.example.abm_improved.Clients;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.abm_improved.R;
+import com.example.abm_improved.Utils.DatabaseUtils;
+import com.example.abm_improved.Utils.OnFinishQueryInterface;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ClientsMainFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ClientsMainFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Button addClientButton;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView clientsRecyclerView;
+    private ClientsRecycleAdapter recyclerViewAdapter;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
-    public ClientsMainFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ClientsMainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ClientsMainFragment newInstance(String param1, String param2) {
-        ClientsMainFragment fragment = new ClientsMainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clients_main, container, false);
+        View view =  inflater.inflate(R.layout.fragment_clients_main, container, false);
+
+        progressBar = requireActivity().findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        addClientButton = view.findViewById(R.id.addNewClientButton);
+
+        recyclerViewLayoutManager = new LinearLayoutManager(requireActivity());
+        clientsRecyclerView = view.findViewById(R.id.recyclerViewClients);
+        clientsRecyclerView.hasFixedSize();
+        clientsRecyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL));
+        clientsRecyclerView.setLayoutManager(recyclerViewLayoutManager);
+
+        DatabaseUtils.getAllClientsFromDatabase(new OnGetAllClients());
+
+        addClientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        //todo finish this fragment
+        return view;
+    }
+
+    private class OnGetAllClients implements OnFinishQueryInterface {
+        @Override
+        public void onFinishQuery() {
+            recyclerViewAdapter = new ClientsRecycleAdapter(DatabaseUtils.getClients());
+            clientsRecyclerView.setAdapter(recyclerViewAdapter);
+
+            progressBar.setVisibility(View.GONE); // disable loading screen
+
+            //onclick of each item in the recycle view (client in the list)
+            recyclerViewAdapter.setOnItemClickListener(position -> {
+//                Intent myIntent = new Intent(ClientsMainActivity.this, SingleClientViewActivity.class);
+//                myIntent.putExtra("clientUID", BackendHandling.clients.get(position).getUid()); //Optional parameters
+//                ClientsMainActivity.this.startActivity(myIntent);
+            });
+        }
     }
 }

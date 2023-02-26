@@ -43,4 +43,8 @@ dependencies {
 
     //for google sign in
     implementation 'com.google.android.gms:play-services-auth:20.4.1'
+
+    //for glide (image loading)
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 }

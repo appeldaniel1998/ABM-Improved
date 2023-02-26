@@ -25,18 +25,9 @@ public class Client {
      * @param phoneNumber  phone number
      * @param address      address
      * @param birthdayDate birthdayDate
+     * @param uid          uid
+     * @param isManager      manager
      */
-    public Client(String firstName, String lastName, String email, String phoneNumber, String address, int birthdayDate, String uid) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.birthdayDate = birthdayDate;
-        this.uid = uid;
-        this.manager = false;
-    }
-
     public Client(String firstName, String lastName, String email, String phoneNumber, String address, int birthdayDate, String uid, boolean isManager) {
         this.firstName = firstName;
         this.lastName = lastName;

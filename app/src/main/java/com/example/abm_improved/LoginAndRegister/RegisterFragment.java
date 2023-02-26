@@ -56,7 +56,6 @@ public class RegisterFragment extends BaseFragment {
         initFields(view);
 
         requireActivity().setTitle("Register New User");
-        requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.GONE);
         auth = super.getAuth();
         datePickerDialog = DatePicker.initDatePicker(birthdayTextView, requireActivity());
         birthdayTextView.setText(DatePicker.getTodayDate()); // Set initial date to today's date
@@ -97,14 +96,14 @@ public class RegisterFragment extends BaseFragment {
                 assert user != null;
                 String userUID = user.getUid();//get user ID
 
-                Client userToAdd = new Client(textFirstName, textLastName, textEmail, textPhoneNumber, textAddress, textBirthdayDate, userUID); //creating a new user
+                Client userToAdd = new Client(textFirstName, textLastName, textEmail, textPhoneNumber, textAddress, textBirthdayDate, userUID, false); //creating a new user
                 DatabaseUtils.addClientToFirebase(userToAdd, requireActivity());//add the user to the database
 
                 if (profilePicSelected) {
                     DatabaseUtils.uploadImageToFirebase(super.getStorageReference(), userUID, profilePicUri, requireActivity());
                 }
 
-                //upon success, move to appointments main activity
+                //upon success and finishing, move to appointments main activity
                 Bundle bundle = new Bundle();
                 AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
                 appointmentsMainFragment.setArguments(bundle);

@@ -112,18 +112,24 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 TextView name = findViewById(R.id.nameMenuHeader);
                 if (currUser != null) {
                     //Toggle visibility for menu items in accordance to whether the user is a client or a manager
+                    MenuItem cart = menu.findItem(R.id.menuItemCart);
+                    MenuItem clients = menu.findItem(R.id.menuItemClients);
+                    MenuItem appointmentTypes = menu.findItem(R.id.menuItemAppointmentTypes);
                     if (currUser.getManager()) { // A manager
                         // remove any page which a client can get no access to
-                        MenuItem cart = menu.findItem(R.id.menuItemCart);
                         cart.setVisible(false);
+
+                        // show all pages which could have been hidden by a client
+                        clients.setVisible(true);
+                        appointmentTypes.setVisible(true);
 
                     } else { // A client
                         // remove any page which a manager can get no access to
-                        MenuItem clients = menu.findItem(R.id.menuItemClients);
                         clients.setVisible(false);
-
-                        MenuItem appointmentTypes = menu.findItem(R.id.menuItemAppointmentTypes);
                         appointmentTypes.setVisible(false);
+
+                        // show all pages which could have been hidden by a manager
+                        cart.setVisible(true);
 
                         menu.findItem(R.id.menuItemAnalytics).setTitle("History");
                     }

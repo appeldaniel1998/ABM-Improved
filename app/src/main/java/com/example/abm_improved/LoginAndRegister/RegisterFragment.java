@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.Utils.DatabaseUtils;
@@ -52,7 +53,7 @@ public class RegisterFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.template_input_info_client_user, container, false);
         initFields(view);
 
         requireActivity().setTitle("Register New User");
@@ -103,7 +104,13 @@ public class RegisterFragment extends BaseFragment {
                     DatabaseUtils.uploadImageToFirebase(super.getStorageReference(), userUID, profilePicUri, requireActivity());
                 }
 
-                //upon success and finishing, move to appointments main activity
+                // Upon success and finishing:
+
+                // 1. Init menu sidebar again (to show the correct menu items and user)
+                BaseActivity baseActivity = (BaseActivity) requireActivity();
+                baseActivity.initMenuSideBar();
+
+                // 2. Move to appointments main activity
                 Bundle bundle = new Bundle();
                 AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
                 appointmentsMainFragment.setArguments(bundle);

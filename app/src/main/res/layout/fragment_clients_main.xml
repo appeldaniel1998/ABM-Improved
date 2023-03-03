@@ -20,15 +20,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewClients"
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/darker_gray"
-            android:padding="4dp"
-            android:layout_margin="8dp"
-            android:scrollbars="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/addNewClientButton" />
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addNewClientButton">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewClients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:padding="4dp"
+                android:scrollbars="vertical" />
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -61,6 +61,7 @@ public class DatabaseUtils {
     }
 
     public static void getAllClientsFromDatabase(OnFinishQueryInterface onFinishQueryInterface) {
+        clients = new ArrayList<>(); // reset clients array
         //accessing database
         database.collection("Clients").orderBy("firstName")
                 .get()

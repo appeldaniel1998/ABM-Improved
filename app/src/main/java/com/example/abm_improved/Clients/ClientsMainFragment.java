@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.OnFinishQueryInterface;
@@ -50,10 +51,12 @@ public class ClientsMainFragment extends Fragment {
         addClientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle bundle = new Bundle();
+                AddNewClientFragment addNewClientFragment = new AddNewClientFragment();
+                addNewClientFragment.setArguments(bundle);
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addNewClientFragment).addToBackStack(null).commit();
             }
         });
-        //todo finish this fragment
         return view;
     }
 

@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.R;
@@ -67,14 +68,22 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        //hide keyboard -->
         InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
+        // <-- hide keyboard
     }
 
     private class onUserLoggedIn implements OnFinishQueryInterface {
         @Override
         public void onFinishQuery() {
-            //upon success, move to appointments main activity
+            // Upon success,
+            // Init menu sidebar again (to show the correct menu items and user)
+            BaseActivity baseActivity = (BaseActivity) requireActivity();
+            baseActivity.initMenuSideBar();
+
+            // move to appointments main activity
             Bundle bundle = new Bundle();
             AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
             appointmentsMainFragment.setArguments(bundle);

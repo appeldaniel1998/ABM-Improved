@@ -1,17 +1,26 @@
 package com.example.abm_improved.Utils;
 
+import static com.example.abm_improved.BaseActivity.profilePicSelected;
+import static com.example.abm_improved.BaseActivity.profilePicUri;
+
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.LoginAndRegister.LoginFragment;
+import com.example.abm_improved.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -22,6 +31,8 @@ public class DatabaseUtils {
 
     private static FirebaseAuth auth = FirebaseAuth.getInstance();
     private static FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+    private static StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     private static ArrayList<Client> clients = new ArrayList<>();
 
@@ -43,6 +54,38 @@ public class DatabaseUtils {
             String errorMsg = "Error logging in! " + e.getMessage();
             Toast.makeText(currFragment.requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
             Log.i(TAG, errorMsg);
+        });
+    }
+
+    public static void registerNewUser(FragmentActivity activity, String textFirstName, String textLastName, String textEmail, String textPhoneNumber, String textAddress, String textPassword, int textBirthdayDate) {
+        auth.createUserWithEmailAndPassword(textEmail, textPassword).addOnCompleteListener(task -> {//ask firebase auth to create a new user
+            if (task.isSuccessful()) { // if authenticator succeeded in creating a user
+                FirebaseUser user = auth.getCurrentUser();//take that user
+
+                assert user != null;
+                String userUID = user.getUid();//get user ID
+
+                Client userToAdd = new Client(textFirstName, textLastName, textEmail, textPhoneNumber, textAddress, textBirthdayDate, userUID, false); //creating a new user
+                DatabaseUtils.addClientToFirebase(userToAdd, activity);//add the user to the database
+
+                if (profilePicSelected) {
+                    DatabaseUtils.uploadImageToFirebase(storageReference, userUID, profilePicUri, activity);
+                }
+
+                // Upon success and finishing:
+
+                // 1. Init menu sidebar again (to show the correct menu items and user)
+                BaseActivity baseActivity = (BaseActivity) activity;
+                baseActivity.initMenuSideBar();
+
+                // 2. Move to appointments main activity
+                Bundle bundle = new Bundle();
+                AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
+                appointmentsMainFragment.setArguments(bundle);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+            } else {
+                Toast.makeText(activity, "Registration failed! Unable to authenticate new user", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

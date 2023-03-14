@@ -14,11 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.abm_improved.LoginAndRegister.RegisterFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatePicker;
+import com.example.abm_improved.Utils.Interfaces;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AddNewClientFragment extends Fragment {
@@ -40,14 +39,14 @@ public class AddNewClientFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
 
     //for choosing profile pic
-    private RegisterFragment.OnChooseProfilePicListener onChooseProfilePicListener;
+    private Interfaces.OnChooseProfilePicListener onChooseProfilePicListener;
     public static boolean profilePicSelected = false;
     public static Uri profilePicUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.template_input_info_client_user, container, false);
+        View view = inflater.inflate(R.layout.clients_templates_enter_client_details, container, false);
         initFields(view);
 
         requireActivity().setTitle("Add New Client");
@@ -62,7 +61,7 @@ public class AddNewClientFragment extends Fragment {
             String phoneNumberStr = phoneNumberEditText.getText().toString();
             String addressStr = addressEditText.getText().toString();
             String birthdayStr = birthdayTextView.getText().toString();
-            addNewUser(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DatePicker.stringToInt(birthdayStr));
+//            addNewUser(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DatePicker.stringToInt(birthdayStr));
         });
 
 

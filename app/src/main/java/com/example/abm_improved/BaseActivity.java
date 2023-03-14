@@ -2,6 +2,7 @@ package com.example.abm_improved;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,16 +37,27 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RegisterFragment.OnChooseProfilePicListener {
+import com.example.abm_improved.Utils.Interfaces.*;
+
+public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnChooseProfilePicListener {
+
+    // For menu side bar
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    // ------------------------
 
-    private ImageView selectedImageAddEditDataFragment;
-    private ActivityResultLauncher<Intent> filePicker;
-
+    // For Firebase Access
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore database = FirebaseFirestore.getInstance();
     private final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    // ------------------------
+
+    // For choosing profile pic
+    private ImageView selectedImageAddEditDataFragment;
+    private ActivityResultLauncher<Intent> filePicker;
+    public static boolean profilePicSelected = false;
+    public static Uri profilePicUri;
+    // ------------------------
 
 
     @Override
@@ -66,10 +78,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         filePicker = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 assert result.getData() != null;
-                RegisterFragment.profilePicUri = result.getData().getData();
-                if (RegisterFragment.profilePicUri != null) {
-                    selectedImageAddEditDataFragment.setImageURI(RegisterFragment.profilePicUri);
-                    RegisterFragment.profilePicSelected = true;
+                profilePicUri = result.getData().getData();
+                if (profilePicUri != null) {
+                    selectedImageAddEditDataFragment.setImageURI(profilePicUri);
+                    profilePicSelected = true;
                 }
             }
         });

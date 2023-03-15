@@ -55,11 +55,7 @@ public class LoginFragment extends BaseFragment {
 
             //Register button onclick listener
             registerButton.setOnClickListener(v -> {
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, new RegisterFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RegisterFragment()).addToBackStack(null).commit();
             });
         }
         return view;

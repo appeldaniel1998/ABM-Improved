@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatePicker;
 import com.example.abm_improved.Utils.Interfaces;
@@ -28,10 +29,13 @@ public class EnterClientDetails {
     private final LinearLayout birthdayLinearLayout;
     private final TextView birthdayTextView;
     private final Button registerButton;
+
+    private final Button deleteButton; //only for EDIT_CLIENT
     // --------------------
 
     public static final int USER = 0;
-    public static final int CLIENT = 1; // A non-user client
+    public static final int ADD_CLIENT = 1; // A non-user client
+    public static final int EDIT_CLIENT = 2; //difference to client is Adding a delete button
 
     private final DatePickerDialog datePickerDialog; //for date picker
     private final Interfaces.OnChooseProfilePicListener onChooseProfilePicListener; //for choosing profile pic
@@ -58,6 +62,7 @@ public class EnterClientDetails {
         this.birthdayLinearLayout = view.findViewById(R.id.birthdayLinearLayout);
         this.birthdayTextView = view.findViewById(R.id.birthdayDatePicker);
         this.registerButton = view.findViewById(R.id.registerButton);
+        this.deleteButton = view.findViewById(R.id.deleteButton);
         this.passwordEditText = view.findViewById(R.id.passwordEditText);
         this.confirmPasswordEditText = view.findViewById(R.id.retypePasswordEditText);
         this.onChooseProfilePicListener = onChooseProfilePicListener;
@@ -71,10 +76,14 @@ public class EnterClientDetails {
         });
 
 
-        if (userType == CLIENT) { //if a user is passed, then it is required to include password and confirm password fields
+        if (userType == ADD_CLIENT || userType == EDIT_CLIENT) { //if a user is passed, then it is required to include password and confirm password fields
             this.passwordEditText.setVisibility(View.GONE);
             this.confirmPasswordEditText.setVisibility(View.GONE);
             view.findViewById(R.id.title).setVisibility(View.GONE);
+            this.registerButton.setText("Done");
+        }
+        if (userType == EDIT_CLIENT) {
+            this.deleteButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -123,11 +132,25 @@ public class EnterClientDetails {
         return registerButton;
     }
 
+    public Button getDeleteButton() {
+        return deleteButton;
+    }
+
     public DatePickerDialog getDatePickerDialog() {
         return datePickerDialog;
     }
 
     public Interfaces.OnChooseProfilePicListener getOnChooseProfilePicListener() {
         return onChooseProfilePicListener;
+    }
+
+    public void setValuesToXmlFields(Client client) {
+        this.firstNameEditText.setText(client.getFirstName());
+        this.lastNameEditText.setText(client.getLastName());
+        this.emailEditText.setText(client.getEmail());
+        this.phoneNumberEditText.setText(client.getPhoneNumber());
+        this.addressEditText.setText(client.getAddress());
+        this.birthdayTextView.setText(DatePicker.intToString(client.getBirthdayDate()));
+
     }
 }

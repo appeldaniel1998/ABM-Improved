@@ -1,4 +1,4 @@
-package com.example.abm_improved.Clients;
+package com.example.abm_improved.Clients.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -56,7 +56,7 @@ public class DatabaseUtils {
         });
     }
 
-    public static void registerNewUser(FragmentActivity activity, String textFirstName, String textLastName, String textEmail, String textPhoneNumber, String textAddress, String textPassword, int textBirthdayDate) {
+    public static void registerNewUser(FragmentActivity currActivity, String textFirstName, String textLastName, String textEmail, String textPhoneNumber, String textAddress, String textPassword, int textBirthdayDate) {
         auth.createUserWithEmailAndPassword(textEmail, textPassword).addOnCompleteListener(task -> {//ask firebase auth to create a new user
             if (task.isSuccessful()) { // if authenticator succeeded in creating a user
                 FirebaseUser user = auth.getCurrentUser();//take that user
@@ -65,21 +65,25 @@ public class DatabaseUtils {
                 String userUID = user.getUid();//get user ID
 
                 Client userToAdd = new Client(textFirstName, textLastName, textEmail, textPhoneNumber, textAddress, textBirthdayDate, userUID, false); //creating a new user
-                DatabaseUtils.addClientToFirebase(userToAdd, activity);//add the user to the database
-
-                if (profilePicSelected) {
-                    DatabaseUtils.uploadImageToFirebase(storageReference.child("Clients").child(userUID).child("profile.jpg"), profilePicUri, activity);
-                }
+                uploadRelevantClientInfo(userToAdd, currActivity, storageReference.child("Clients").child(userToAdd.getUid()).child("profile.jpg")); //upload user to database
 
                 // Upon success and finishing:
                 // Init menu sidebar again (to show the correct menu items and user)
-                BaseActivity baseActivity = (BaseActivity) activity;
+                BaseActivity baseActivity = (BaseActivity) currActivity;
                 baseActivity.initMenuSideBar();
 
             } else {
-                Toast.makeText(activity, "Registration failed! Unable to authenticate new user", Toast.LENGTH_SHORT).show();
+                Toast.makeText(currActivity, "Registration failed! Unable to authenticate new user", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public static void uploadRelevantClientInfo(Client currClient, FragmentActivity currActivity, StorageReference savedImagePath) {
+        DatabaseUtils.addClientToFirebase(currClient, currActivity);//add the user to the database
+
+        if (profilePicSelected) {
+            DatabaseUtils.uploadImageToFirebase(savedImagePath, profilePicUri, currActivity);
+        }
     }
 
     public static void addClientToFirebase(Client user, FragmentActivity currActivity) {
@@ -120,5 +124,19 @@ public class DatabaseUtils {
                 .addOnFailureListener(e -> {
                     Log.i(TAG, "Error getting documents: " + e.getMessage());
                 });
+    }
+
+    public static void deleteClient(String uid) {
+        // Delete client from database
+        database.collection("Clients").document(uid).delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Client deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting client: " + e.getMessage()));
+
+        // Delete client image from storage
+        storageReference.child("Clients").child(uid).child("profile.jpg").delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Client image deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting client image: " + e.getMessage()));
+
+        //TODO: Delete other client data from database
     }
 }

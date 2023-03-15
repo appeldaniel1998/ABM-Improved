@@ -48,10 +48,7 @@ public class RegisterFragment extends BaseFragment {
                 registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, DatePicker.stringToInt(birthdayStr));
 
                 // Move to appointments main fragment
-                Bundle bundle = new Bundle();
-                AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
-                appointmentsMainFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsMainFragment()).addToBackStack(null).commit();
             }
         });
         return view;

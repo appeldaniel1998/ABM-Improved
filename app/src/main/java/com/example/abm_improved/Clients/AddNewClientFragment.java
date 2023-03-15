@@ -1,36 +1,18 @@
 package com.example.abm_improved.Clients;
 
-import static com.example.abm_improved.BaseActivity.profilePicSelected;
-import static com.example.abm_improved.BaseActivity.profilePicUri;
-import static com.example.abm_improved.Utils.DatabaseUtils.registerNewUser;
-
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.DatePicker;
-import com.example.abm_improved.Utils.Interfaces;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.UUID;
@@ -43,7 +25,7 @@ public class AddNewClientFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.clients_templates_enter_client_details, container, false);
 
-        enterClientDetails = new EnterClientDetails(view, onChooseProfilePicListener, requireActivity(), EnterClientDetails.CLIENT);
+        enterClientDetails = new EnterClientDetails(view, onChooseProfilePicListener, requireActivity(), EnterClientDetails.ADD_CLIENT);
         requireActivity().setTitle("Add New Client");
 
         enterClientDetails.getRegisterButton().setOnClickListener(v -> {
@@ -59,19 +41,13 @@ public class AddNewClientFragment extends BaseFragment {
                 String currClientUid = UUID.randomUUID().toString(); // Creating UID for the new user
 
                 Client userToAdd = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DatePicker.stringToInt(birthdayStr), currClientUid, false); //creating a new client
-                DatabaseUtils.addClientToFirebase(userToAdd, requireActivity()); //Add the client to the database
 
-                if (profilePicSelected) {
-                    DatabaseUtils.uploadImageToFirebase(FirebaseStorage.getInstance().getReference().child("Clients").child(currClientUid).child("profile.jpg"), //path to save the pic
-                            profilePicUri, // pic to save
-                            requireActivity()); // current activity
-                }
+                DatabaseUtils.uploadRelevantClientInfo(userToAdd,
+                        requireActivity(),
+                        FirebaseStorage.getInstance().getReference().child("Clients").child(currClientUid).child("profile.jpg"));
 
                 // if successful, go back to the previous fragment
-                Bundle bundle = new Bundle();
-                ClientsMainFragment clientsMainFragment = new ClientsMainFragment();
-                clientsMainFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, clientsMainFragment).commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClientsMainFragment()).addToBackStack(null).commit();
             }
         });
 

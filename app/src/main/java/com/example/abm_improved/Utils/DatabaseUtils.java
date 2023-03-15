@@ -29,10 +29,9 @@ import java.util.Map;
 public class DatabaseUtils {
     private static final String TAG = "DatabaseUtils";
 
-    private static FirebaseAuth auth = FirebaseAuth.getInstance();
-    private static FirebaseFirestore database = FirebaseFirestore.getInstance();
-
-    private static StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private static final FirebaseAuth auth = FirebaseAuth.getInstance();
+    private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private static final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     private static ArrayList<Client> clients = new ArrayList<>();
 
@@ -47,7 +46,7 @@ public class DatabaseUtils {
 
     public static void loginUser(String email, String password, LoginFragment currFragment, OnFinishQueryInterface onFinishQueryInterface) {
         //send to firebase auth - upon success logs in automatically
-        currFragment.getAuth().signInWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
+        auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
             Toast.makeText(currFragment.requireContext(), "Login successful!", Toast.LENGTH_SHORT).show();
             onFinishQueryInterface.onFinishQuery(); // transfer to appointments main fragment
         }).addOnFailureListener(e -> {
@@ -69,20 +68,14 @@ public class DatabaseUtils {
                 DatabaseUtils.addClientToFirebase(userToAdd, activity);//add the user to the database
 
                 if (profilePicSelected) {
-                    DatabaseUtils.uploadImageToFirebase(storageReference, userUID, profilePicUri, activity);
+                    DatabaseUtils.uploadImageToFirebase(storageReference.child("Clients").child(userUID).child("profile.jpg"), profilePicUri, activity);
                 }
 
                 // Upon success and finishing:
-
-                // 1. Init menu sidebar again (to show the correct menu items and user)
+                // Init menu sidebar again (to show the correct menu items and user)
                 BaseActivity baseActivity = (BaseActivity) activity;
                 baseActivity.initMenuSideBar();
 
-                // 2. Move to appointments main activity
-                Bundle bundle = new Bundle();
-                AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
-                appointmentsMainFragment.setArguments(bundle);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
             } else {
                 Toast.makeText(activity, "Registration failed! Unable to authenticate new user", Toast.LENGTH_SHORT).show();
             }
@@ -95,16 +88,15 @@ public class DatabaseUtils {
                 .addOnFailureListener(e -> Toast.makeText(currActivity, "Registration failed! Unable to add user to database.", Toast.LENGTH_SHORT).show()); //Registration failed
     }
 
-    public static void uploadImageToFirebase(StorageReference storageReference, String clientUID, Uri profilePicUri, Context context) {
+    public static void uploadImageToFirebase(StorageReference fileRef, Uri profilePicUri, Context context) {
         // upload image to firebase storage
-        StorageReference fileRef = storageReference.child("Clients").child(clientUID).child("profile.jpg");
         fileRef.putFile(profilePicUri)
                 .addOnSuccessListener(taskSnapshot -> Toast.makeText(context, "Profile image uploaded successfully!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(context, "Image upload failed!", Toast.LENGTH_SHORT).show());
     }
 
     public static void getAllClientsFromDatabase(OnFinishQueryInterface onFinishQueryInterface) {
-        clients = new ArrayList<>(); // reset clients array
+        clients.clear(); // reset clients array
         //accessing database
         database.collection("Clients").orderBy("firstName")
                 .get()

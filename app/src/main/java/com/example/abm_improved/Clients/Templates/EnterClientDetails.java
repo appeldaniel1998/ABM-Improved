@@ -17,24 +17,24 @@ import com.example.abm_improved.Utils.Interfaces;
 public class EnterClientDetails {
 
     // basic XML fields
-    private ImageView profilePicImageView;
-    private EditText firstNameEditText;
-    private EditText lastNameEditText;
-    private EditText emailEditText;
+    private final ImageView profilePicImageView;
+    private final EditText firstNameEditText;
+    private final EditText lastNameEditText;
+    private final EditText emailEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
-    private EditText phoneNumberEditText;
-    private EditText addressEditText;
-    private LinearLayout birthdayLinearLayout;
-    private TextView birthdayTextView;
-    private Button registerButton;
+    private final EditText phoneNumberEditText;
+    private final EditText addressEditText;
+    private final LinearLayout birthdayLinearLayout;
+    private final TextView birthdayTextView;
+    private final Button registerButton;
     // --------------------
 
     public static final int USER = 0;
     public static final int CLIENT = 1; // A non-user client
 
-    private DatePickerDialog datePickerDialog; //for date picker
-    private Interfaces.OnChooseProfilePicListener onChooseProfilePicListener; //for choosing profile pic
+    private final DatePickerDialog datePickerDialog; //for date picker
+    private final Interfaces.OnChooseProfilePicListener onChooseProfilePicListener; //for choosing profile pic
 
 
     /**
@@ -49,10 +49,6 @@ public class EnterClientDetails {
                               FragmentActivity activity,
                               int userType) {
 
-        if (userType == USER) { //if a user is passed, then it is required to include password and confirm password fields
-            this.passwordEditText = view.findViewById(R.id.passwordEditText);
-            this.confirmPasswordEditText = view.findViewById(R.id.retypePasswordEditText);
-        }
         this.profilePicImageView = view.findViewById(R.id.personIcon);
         this.firstNameEditText = view.findViewById(R.id.firstNameEditText);
         this.lastNameEditText = view.findViewById(R.id.lastNameEditText);
@@ -62,6 +58,8 @@ public class EnterClientDetails {
         this.birthdayLinearLayout = view.findViewById(R.id.birthdayLinearLayout);
         this.birthdayTextView = view.findViewById(R.id.birthdayDatePicker);
         this.registerButton = view.findViewById(R.id.registerButton);
+        this.passwordEditText = view.findViewById(R.id.passwordEditText);
+        this.confirmPasswordEditText = view.findViewById(R.id.retypePasswordEditText);
         this.onChooseProfilePicListener = onChooseProfilePicListener;
 
         this.datePickerDialog = DatePicker.initDatePicker(birthdayTextView, activity);
@@ -71,6 +69,13 @@ public class EnterClientDetails {
         this.profilePicImageView.setOnClickListener(v -> {
             this.onChooseProfilePicListener.onImageClick(profilePicImageView);
         });
+
+
+        if (userType == CLIENT) { //if a user is passed, then it is required to include password and confirm password fields
+            this.passwordEditText.setVisibility(View.GONE);
+            this.confirmPasswordEditText.setVisibility(View.GONE);
+            view.findViewById(R.id.title).setVisibility(View.GONE);
+        }
     }
 
 

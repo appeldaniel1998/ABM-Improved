@@ -48,14 +48,11 @@ public class ClientsMainFragment extends Fragment {
 
         DatabaseUtils.getAllClientsFromDatabase(new OnGetAllClients());
 
-        addClientButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                AddNewClientFragment addNewClientFragment = new AddNewClientFragment();
-                addNewClientFragment.setArguments(bundle);
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addNewClientFragment).addToBackStack(null).commit();
-            }
+        addClientButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            AddNewClientFragment addNewClientFragment = new AddNewClientFragment();
+            addNewClientFragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addNewClientFragment).addToBackStack(null).commit();
         });
         return view;
     }

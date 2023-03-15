@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.R;
@@ -21,9 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class RegisterFragment extends BaseFragment {
 
     private EnterClientDetails enterClientDetails;
-
-    private OnChooseProfilePicListener onChooseProfilePicListener;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,19 +46,14 @@ public class RegisterFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             } else {
                 registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, DatePicker.stringToInt(birthdayStr));
+
+                // Move to appointments main fragment
+                Bundle bundle = new Bundle();
+                AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
+                appointmentsMainFragment.setArguments(bundle);
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
             }
         });
         return view;
-    }
-
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof OnChooseProfilePicListener) {
-            onChooseProfilePicListener = (OnChooseProfilePicListener) context;
-        } else {
-            throw new RuntimeException(context + " must implement OnChooseMediaListener");
-        }
     }
 }

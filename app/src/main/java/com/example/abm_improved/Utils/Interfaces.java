@@ -4,6 +4,10 @@ import android.widget.ImageView;
 
 public class Interfaces {
 
+    public interface OnFinishQueryInterface {
+        void onFinishQuery();
+    }
+
     public interface OnChooseProfilePicListener {
         void onImageClick(ImageView imageView);
     }

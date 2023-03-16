@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * It is a subclass of View.OnClickListener
  * We used this tutorial to create this class: https://www.youtube.com/watch?v=Nw9JF55LDzE
  */
-public class ClientsRecycleAdapter extends RecyclerView.Adapter<ClientsRecycleAdapter.ClientViewHolder> {
+public class ClientsRecyclerAdapter extends RecyclerView.Adapter<ClientsRecyclerAdapter.ClientViewHolder> {
 
     private ArrayList<Client> clients;
     private OnItemClickListener clickListener; //instance of interface below
@@ -59,7 +59,7 @@ public class ClientsRecycleAdapter extends RecyclerView.Adapter<ClientsRecycleAd
         }
     }
 
-    public ClientsRecycleAdapter(ArrayList<Client> clients) {
+    public ClientsRecyclerAdapter(ArrayList<Client> clients) {
         this.clients = clients;
     }
 

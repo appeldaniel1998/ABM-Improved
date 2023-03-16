@@ -23,7 +23,7 @@ public class AddNewClientFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.clients_templates_enter_client_details, container, false);
+        View view = inflater.inflate(R.layout.templates_enter_client_details, container, false);
 
         enterClientDetails = new EnterClientDetails(view, onChooseProfilePicListener, requireActivity(), EnterClientDetails.ADD_CLIENT);
         requireActivity().setTitle("Add New Client");

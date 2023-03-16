@@ -19,7 +19,8 @@ import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.R;
-import com.example.abm_improved.Utils.OnFinishQueryInterface;
+import com.example.abm_improved.Utils.Interfaces;
+import com.example.abm_improved.Utils.Interfaces.OnFinishQueryInterface;
 
 public class LoginFragment extends BaseFragment {
 
@@ -71,7 +72,7 @@ public class LoginFragment extends BaseFragment {
         // <-- hide keyboard
     }
 
-    private class onUserLoggedIn implements OnFinishQueryInterface {
+    private class onUserLoggedIn implements Interfaces.OnFinishQueryInterface {
         @Override
         public void onFinishQuery() {
             // Upon success,

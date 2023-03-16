@@ -26,7 +26,7 @@ public class EditClientFragment extends BaseFragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                 Bundle savedInstanceState) {
             // Inflate the layout for this fragment
-            View view =  inflater.inflate(R.layout.clients_templates_enter_client_details, container, false);
+            View view =  inflater.inflate(R.layout.templates_enter_client_details, container, false);
 
             // Getting index of current client from previous fragment
             Bundle args = getArguments();

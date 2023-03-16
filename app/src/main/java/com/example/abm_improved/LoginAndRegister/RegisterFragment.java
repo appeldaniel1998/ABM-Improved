@@ -2,22 +2,17 @@ package com.example.abm_improved.LoginAndRegister;
 
 import static com.example.abm_improved.Utils.DatabaseUtils.registerNewUser;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatePicker;
-import com.example.abm_improved.Utils.Interfaces.OnChooseProfilePicListener;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterFragment extends BaseFragment {
 
@@ -25,7 +20,7 @@ public class RegisterFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.clients_templates_enter_client_details, container, false);
+        View view = inflater.inflate(R.layout.templates_enter_client_details, container, false);
 
         enterClientDetails = new EnterClientDetails(view, onChooseProfilePicListener, requireActivity(), EnterClientDetails.USER);
 

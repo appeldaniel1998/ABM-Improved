@@ -9,17 +9,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseActivity;
+import com.example.abm_improved.DataClasses.AppointmentType;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.LoginAndRegister.LoginFragment;
 import com.example.abm_improved.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -35,8 +40,14 @@ public class DatabaseUtils {
 
     private static ArrayList<Client> clients = new ArrayList<>();
 
+    private static ArrayList<AppointmentType> appointmentTypes = new ArrayList<>();
+
     public static ArrayList<Client> getClients() {
         return clients;
+    }
+
+    public static ArrayList<AppointmentType> getAppointmentTypes() {
+        return appointmentTypes;
     }
 
 
@@ -44,7 +55,7 @@ public class DatabaseUtils {
         return auth.getCurrentUser() != null;
     }
 
-    public static void loginUser(String email, String password, LoginFragment currFragment, OnFinishQueryInterface onFinishQueryInterface) {
+    public static void loginUser(String email, String password, LoginFragment currFragment, Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
         //send to firebase auth - upon success logs in automatically
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
             Toast.makeText(currFragment.requireContext(), "Login successful!", Toast.LENGTH_SHORT).show();
@@ -94,49 +105,59 @@ public class DatabaseUtils {
 
     public static void uploadImageToFirebase(StorageReference fileRef, Uri profilePicUri, Context context) {
         // upload image to firebase storage
-        fileRef.putFile(profilePicUri)
-                .addOnSuccessListener(taskSnapshot -> Toast.makeText(context, "Profile image uploaded successfully!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(context, "Image upload failed!", Toast.LENGTH_SHORT).show());
+        fileRef.putFile(profilePicUri).addOnSuccessListener(taskSnapshot -> Toast.makeText(context, "Profile image uploaded successfully!", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(context, "Image upload failed!", Toast.LENGTH_SHORT).show());
     }
 
-    public static void getAllClientsFromDatabase(OnFinishQueryInterface onFinishQueryInterface) {
+    public static void getAllClientsFromDatabase(Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
         clients.clear(); // reset clients array
         //accessing database
-        database.collection("Clients").orderBy("firstName")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        //save client data from database to clients array
-                        Map<String, Object> data = document.getData();
-                        String email = (String) data.get("email");
-                        String uid = (String) data.get("uid");
-                        String firstName = (String) data.get("firstName");
-                        String lastName = (String) data.get("lastName");
-                        String phoneNumber = (String) data.get("phoneNumber");
-                        String address = (String) data.get("address");
-                        int birthdayDate = Integer.parseInt(data.get("birthdayDate") + "");
-                        boolean isManager = Boolean.parseBoolean(data.get("manager") + "");
-                        Client currClient = new Client(firstName, lastName, email, phoneNumber, address, birthdayDate, uid, isManager); //creating a new user
-                        clients.add(currClient); //adding user to list
-                    }
-                    onFinishQueryInterface.onFinishQuery();
-                })
-                .addOnFailureListener(e -> {
-                    Log.i(TAG, "Error getting documents: " + e.getMessage());
-                });
+        database.collection("Clients").orderBy("firstName").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                //save client data from database to clients array
+                Map<String, Object> data = document.getData();
+                String email = (String) data.get("email");
+                String uid = (String) data.get("uid");
+                String firstName = (String) data.get("firstName");
+                String lastName = (String) data.get("lastName");
+                String phoneNumber = (String) data.get("phoneNumber");
+                String address = (String) data.get("address");
+                int birthdayDate = Integer.parseInt(data.get("birthdayDate") + "");
+                boolean isManager = Boolean.parseBoolean(data.get("manager") + "");
+                Client currClient = new Client(firstName, lastName, email, phoneNumber, address, birthdayDate, uid, isManager); //creating a new user
+                clients.add(currClient); //adding user to list
+            }
+            onFinishQueryInterface.onFinishQuery();
+        }).addOnFailureListener(e -> {
+            Log.i(TAG, "Error getting documents: " + e.getMessage());
+        });
     }
 
     public static void deleteClient(String uid) {
         // Delete client from database
-        database.collection("Clients").document(uid).delete()
-                .addOnSuccessListener(unused -> Log.i(TAG, "Client deleted successfully!"))
-                .addOnFailureListener(e -> Log.i(TAG, "Error deleting client: " + e.getMessage()));
+        database.collection("Clients").document(uid).delete().addOnSuccessListener(unused -> Log.i(TAG, "Client deleted successfully!")).addOnFailureListener(e -> Log.i(TAG, "Error deleting client: " + e.getMessage()));
 
         // Delete client image from storage
-        storageReference.child("Clients").child(uid).child("profile.jpg").delete()
-                .addOnSuccessListener(unused -> Log.i(TAG, "Client image deleted successfully!"))
-                .addOnFailureListener(e -> Log.i(TAG, "Error deleting client image: " + e.getMessage()));
+        storageReference.child("Clients").child(uid).child("profile.jpg").delete().addOnSuccessListener(unused -> Log.i(TAG, "Client image deleted successfully!")).addOnFailureListener(e -> Log.i(TAG, "Error deleting client image: " + e.getMessage()));
 
         //TODO: Delete other client data from database
+    }
+
+    public static void getAllAppointmentTypesFromDatabase(Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
+        database.collection("Appointment Types").orderBy("typeName").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    //save appointment type data from database to appointment types arraylist
+                    Map<String, Object> data = document.getData();
+                    String typeName = (String) data.get("typeName");
+                    String duration = (String) data.get("duration");
+                    String price = (String) data.get("price");
+                    AppointmentType currAppointmentType = new AppointmentType(typeName, price, duration); //creating a new appointment type
+                    appointmentTypes.add(currAppointmentType); //adding appointment type to list
+                }
+                onFinishQueryInterface.onFinishQuery();
+            } else {
+                Log.e(TAG, "Error getting documents: " + task.getException());
+            }
+        });
     }
 }

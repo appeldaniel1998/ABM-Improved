@@ -13,17 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.example.abm_improved.Clients.Adapters.ClientsRecycleAdapter;
+import com.example.abm_improved.Clients.Adapters.ClientsRecyclerAdapter;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.OnFinishQueryInterface;
+import com.example.abm_improved.Utils.Interfaces;
+import com.example.abm_improved.Utils.Interfaces.OnFinishQueryInterface;
+
+import java.lang.annotation.Inherited;
 
 public class ClientsMainFragment extends Fragment {
 
     private Button addClientButton;
 
     private RecyclerView clientsRecyclerView;
-    private ClientsRecycleAdapter recyclerViewAdapter;
+    private ClientsRecyclerAdapter recyclerViewAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
     private ProgressBar progressBar;
@@ -53,10 +56,10 @@ public class ClientsMainFragment extends Fragment {
         return view;
     }
 
-    private class OnGetAllClients implements OnFinishQueryInterface {
+    private class OnGetAllClients implements Interfaces.OnFinishQueryInterface {
         @Override
         public void onFinishQuery() {
-            recyclerViewAdapter = new ClientsRecycleAdapter(DatabaseUtils.getClients());
+            recyclerViewAdapter = new ClientsRecyclerAdapter(DatabaseUtils.getClients());
             clientsRecyclerView.setAdapter(recyclerViewAdapter);
 
             progressBar.setVisibility(View.GONE); // disable loading screen
@@ -69,10 +72,7 @@ public class ClientsMainFragment extends Fragment {
                 args.putString("clientIndex", position + ""); // The uid of the client is passed to the next fragment
                 EditClientFragment fragment = new EditClientFragment();
                 fragment.setArguments(args);
-
-                // Replace the current fragment with the new fragment and add it to the back stack
                 requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-
                 // <--------------------------
             });
         }

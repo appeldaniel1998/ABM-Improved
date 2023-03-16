@@ -3,64 +3,76 @@ package com.example.abm_improved.AppointmentTypes;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
+import com.example.abm_improved.AppointmentTypes.Adapters.AppointmentTypesRecyclerAdapter;
+import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
+import com.example.abm_improved.Utils.DatabaseUtils;
+import com.example.abm_improved.Utils.Interfaces;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AppointmentTypesMainFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class AppointmentTypesMainFragment extends Fragment {
+public class AppointmentTypesMainFragment extends BaseFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Button addAppointmentTypeButton;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView appointmentTypesRecyclerView;
+    private AppointmentTypesRecyclerAdapter recyclerViewAdapter;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
-    public AppointmentTypesMainFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AppointmentTypesMainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AppointmentTypesMainFragment newInstance(String param1, String param2) {
-        AppointmentTypesMainFragment fragment = new AppointmentTypesMainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_appointment_types_main, container, false);
+        View view =  inflater.inflate(R.layout.fragment_appointment_types_main, container, false);
+
+        requireActivity().setTitle("Appointment Types");
+        progressBar = requireActivity().findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        addAppointmentTypeButton = view.findViewById(R.id.addNewAppointmentTypeButton);
+
+        recyclerViewLayoutManager = new LinearLayoutManager(requireActivity());
+        appointmentTypesRecyclerView = view.findViewById(R.id.recyclerViewAppointmentTypes);
+        appointmentTypesRecyclerView.hasFixedSize();
+        appointmentTypesRecyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL));
+        appointmentTypesRecyclerView.setLayoutManager(recyclerViewLayoutManager);
+
+        DatabaseUtils.getAllAppointmentTypesFromDatabase(new AppointmentTypesMainFragment.OnGetAllAppointmentTypes());
+
+        addAppointmentTypeButton.setOnClickListener(v -> {
+//            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddNewClientFragment()).addToBackStack(null).commit(); TODO
+        });
+        return view;
+    }
+
+    private class OnGetAllAppointmentTypes implements Interfaces.OnFinishQueryInterface {
+        @Override
+        public void onFinishQuery() {
+            recyclerViewAdapter = new AppointmentTypesRecyclerAdapter(DatabaseUtils.getAppointmentTypes());
+            appointmentTypesRecyclerView.setAdapter(recyclerViewAdapter);
+
+            progressBar.setVisibility(View.GONE); // disable loading screen
+
+            //onclick of each item in the recycle view (client in the list)
+            recyclerViewAdapter.setOnItemClickListener(position -> {
+//                // Pass to the next fragment ---------->
+//                // Create a new instance of the next fragment and set its arguments
+//                Bundle args = new Bundle();
+//                args.putString("clientIndex", position + ""); // The uid of the client is passed to the next fragment
+//                EditClientFragment fragment = new EditClientFragment();
+//                fragment.setArguments(args);
+//                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+//                // <--------------------------
+            });
+        }
     }
 }

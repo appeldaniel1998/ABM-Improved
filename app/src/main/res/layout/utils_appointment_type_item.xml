@@ -9,16 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="100"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/typeName"
-            android:layout_width="0dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_weight="50"
             android:autofillHints="name"
             android:ems="10"
             android:gravity="center_vertical"
@@ -35,11 +33,10 @@
 
         <TextView
             android:id="@+id/duration"
-            android:layout_width="0dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_weight="25"
             android:ems="10"
             android:gravity="center_vertical"
             android:hint="Duration"
@@ -53,11 +50,10 @@
 
         <TextView
             android:id="@+id/typePrice"
-            android:layout_width="0dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_weight="25"
             android:ems="10"
             android:gravity="center_vertical"
             android:hint="Price"

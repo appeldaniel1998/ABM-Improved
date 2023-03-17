@@ -110,7 +110,7 @@ public class DatabaseUtils {
 
     public static void getAllClientsFromDatabase(Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
         clients.clear(); // reset clients array
-        //accessing database
+
         database.collection("Clients").orderBy("firstName").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 //save client data from database to clients array
@@ -143,6 +143,8 @@ public class DatabaseUtils {
     }
 
     public static void getAllAppointmentTypesFromDatabase(Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
+        appointmentTypes.clear(); // reset appointment types array
+
         database.collection("Appointment Types").orderBy("typeName").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -151,7 +153,8 @@ public class DatabaseUtils {
                     String typeName = (String) data.get("typeName");
                     String duration = (String) data.get("duration");
                     String price = (String) data.get("price");
-                    AppointmentType currAppointmentType = new AppointmentType(typeName, price, duration); //creating a new appointment type
+                    String uid = document.getId();
+                    AppointmentType currAppointmentType = new AppointmentType(typeName, price, duration, uid); //creating a new appointment type
                     appointmentTypes.add(currAppointmentType); //adding appointment type to list
                 }
                 onFinishQueryInterface.onFinishQuery();
@@ -159,5 +162,17 @@ public class DatabaseUtils {
                 Log.e(TAG, "Error getting documents: " + task.getException());
             }
         });
+    }
+
+    public static void addAppointmentTypeToDatabase(AppointmentType appointmentType) {
+        database.collection("Appointment Types").document(appointmentType.getUid()).set(appointmentType) //adding appointment type data to database
+                .addOnSuccessListener(unused -> Log.i(TAG, "Appointment type added successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error adding appointment type: " + e.getMessage()));
+    }
+
+    public static void deleteAppointmentTypeFromDatabase(AppointmentType currAppointmentType) {
+        database.collection("Appointment Types").document(currAppointmentType.getUid()).delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Appointment type deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting appointment type: " + e.getMessage()));
     }
 }

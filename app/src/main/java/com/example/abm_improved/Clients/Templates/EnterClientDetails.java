@@ -17,13 +17,13 @@ import com.example.abm_improved.Utils.Interfaces;
 
 public class EnterClientDetails {
 
-    // basic XML fields
+    // basic XML fields ------------->
     private final ImageView profilePicImageView;
     private final EditText firstNameEditText;
     private final EditText lastNameEditText;
     private final EditText emailEditText;
-    private EditText passwordEditText;
-    private EditText confirmPasswordEditText;
+    private final EditText passwordEditText;
+    private final EditText confirmPasswordEditText;
     private final EditText phoneNumberEditText;
     private final EditText addressEditText;
     private final LinearLayout birthdayLinearLayout;
@@ -31,7 +31,7 @@ public class EnterClientDetails {
     private final Button registerButton;
 
     private final Button deleteButton; //only for EDIT_CLIENT
-    // --------------------
+    // <-----------------------------
 
     public static final int USER = 0;
     public static final int ADD_CLIENT = 1; // A non-user client
@@ -87,7 +87,6 @@ public class EnterClientDetails {
         }
     }
 
-
     public ImageView getProfilePicImageView() {
         return profilePicImageView;
     }
@@ -134,14 +133,6 @@ public class EnterClientDetails {
 
     public Button getDeleteButton() {
         return deleteButton;
-    }
-
-    public DatePickerDialog getDatePickerDialog() {
-        return datePickerDialog;
-    }
-
-    public Interfaces.OnChooseProfilePicListener getOnChooseProfilePicListener() {
-        return onChooseProfilePicListener;
     }
 
     public void setValuesToXmlFields(Client client) {

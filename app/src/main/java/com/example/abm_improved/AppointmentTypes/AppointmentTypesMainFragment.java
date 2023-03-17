@@ -49,7 +49,7 @@ public class AppointmentTypesMainFragment extends BaseFragment {
         DatabaseUtils.getAllAppointmentTypesFromDatabase(new AppointmentTypesMainFragment.OnGetAllAppointmentTypes());
 
         addAppointmentTypeButton.setOnClickListener(v -> {
-//            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddNewClientFragment()).addToBackStack(null).commit(); TODO
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddNewAppointmentTypeFragment()).addToBackStack(null).commit();
         });
         return view;
     }
@@ -64,14 +64,14 @@ public class AppointmentTypesMainFragment extends BaseFragment {
 
             //onclick of each item in the recycle view (client in the list)
             recyclerViewAdapter.setOnItemClickListener(position -> {
-//                // Pass to the next fragment ---------->
-//                // Create a new instance of the next fragment and set its arguments
-//                Bundle args = new Bundle();
-//                args.putString("clientIndex", position + ""); // The uid of the client is passed to the next fragment
-//                EditClientFragment fragment = new EditClientFragment();
-//                fragment.setArguments(args);
-//                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-//                // <--------------------------
+                // Pass to the next fragment ---------->
+                // Create a new instance of the next fragment and set its arguments
+                Bundle args = new Bundle();
+                args.putString("appointmentTypeIndex", position + ""); // The uid of the client is passed to the next fragment
+                EditAppointmentTypeFragment fragment = new EditAppointmentTypeFragment();
+                fragment.setArguments(args);
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                // <--------------------------
             });
         }
     }

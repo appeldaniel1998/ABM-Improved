@@ -41,7 +41,7 @@ public class AppointmentTypesMainFragment extends BaseFragment {
         addAppointmentTypeButton = view.findViewById(R.id.addNewAppointmentTypeButton);
 
         recyclerViewLayoutManager = new LinearLayoutManager(requireActivity());
-        appointmentTypesRecyclerView = view.findViewById(R.id.recyclerViewAppointmentTypes);
+        appointmentTypesRecyclerView = view.findViewById(R.id.recyclerView);
         appointmentTypesRecyclerView.hasFixedSize();
         appointmentTypesRecyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), LinearLayoutManager.VERTICAL));
         appointmentTypesRecyclerView.setLayoutManager(recyclerViewLayoutManager);

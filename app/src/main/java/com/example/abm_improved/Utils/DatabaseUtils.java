@@ -116,7 +116,7 @@ public class DatabaseUtils {
                 //save client data from database to clients array
                 Map<String, Object> data = document.getData();
                 String email = (String) data.get("email");
-                String uid = (String) data.get("uid");
+                String uid = document.getId();
                 String firstName = (String) data.get("firstName");
                 String lastName = (String) data.get("lastName");
                 String phoneNumber = (String) data.get("phoneNumber");
@@ -134,10 +134,14 @@ public class DatabaseUtils {
 
     public static void deleteClient(String uid) {
         // Delete client from database
-        database.collection("Clients").document(uid).delete().addOnSuccessListener(unused -> Log.i(TAG, "Client deleted successfully!")).addOnFailureListener(e -> Log.i(TAG, "Error deleting client: " + e.getMessage()));
+        database.collection("Clients").document(uid).delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Client deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting client: " + e.getMessage()));
 
         // Delete client image from storage
-        storageReference.child("Clients").child(uid).child("profile.jpg").delete().addOnSuccessListener(unused -> Log.i(TAG, "Client image deleted successfully!")).addOnFailureListener(e -> Log.i(TAG, "Error deleting client image: " + e.getMessage()));
+        storageReference.child("Clients").child(uid).child("profile.jpg").delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Client image deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting client image: " + e.getMessage()));
 
         //TODO: Delete other client data from database
     }

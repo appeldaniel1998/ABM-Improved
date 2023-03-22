@@ -61,7 +61,7 @@ public class EnterClientDetails {
         this.addressEditText = view.findViewById(R.id.addressEditText);
         this.birthdayLinearLayout = view.findViewById(R.id.birthdayLinearLayout);
         this.birthdayTextView = view.findViewById(R.id.birthdayDatePicker);
-        this.registerButton = view.findViewById(R.id.registerButton);
+        this.registerButton = view.findViewById(R.id.doneButton);
         this.deleteButton = view.findViewById(R.id.deleteButton);
         this.passwordEditText = view.findViewById(R.id.passwordEditText);
         this.confirmPasswordEditText = view.findViewById(R.id.retypePasswordEditText);
@@ -72,7 +72,7 @@ public class EnterClientDetails {
         this.birthdayLinearLayout.setOnClickListener(v -> datePickerDialog.show()); //onclick listener for birthdayLinearLayout to choose a date
 
         this.profilePicImageView.setOnClickListener(v -> {
-            this.onChooseProfilePicListener.onImageClick(profilePicImageView);
+            this.onChooseProfilePicListener.onImageClick(this.profilePicImageView);
         });
 
 

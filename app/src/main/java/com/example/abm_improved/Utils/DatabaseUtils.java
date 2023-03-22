@@ -10,12 +10,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.collection.ArraySet;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseActivity;
+import com.example.abm_improved.Clients.ClientsMainFragment;
 import com.example.abm_improved.DataClasses.AppointmentType;
 import com.example.abm_improved.DataClasses.Client;
+import com.example.abm_improved.DataClasses.Product;
 import com.example.abm_improved.LoginAndRegister.LoginFragment;
 import com.example.abm_improved.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,8 +42,8 @@ public class DatabaseUtils {
     private static final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     private static ArrayList<Client> clients = new ArrayList<>();
-
     private static ArrayList<AppointmentType> appointmentTypes = new ArrayList<>();
+    private static ArrayList<Product> products = new ArrayList<>();
 
     public static ArrayList<Client> getClients() {
         return clients;
@@ -50,6 +53,9 @@ public class DatabaseUtils {
         return appointmentTypes;
     }
 
+    public static ArrayList<Product> getProducts() {
+        return products;
+    }
 
     public static boolean userLoggedIn() {
         return auth.getCurrentUser() != null;
@@ -94,6 +100,7 @@ public class DatabaseUtils {
 
         if (profilePicSelected) {
             DatabaseUtils.uploadImageToFirebase(savedImagePath, profilePicUri, currActivity);
+            profilePicSelected = false;
         }
     }
 
@@ -178,5 +185,53 @@ public class DatabaseUtils {
         database.collection("Appointment Types").document(currAppointmentType.getUid()).delete()
                 .addOnSuccessListener(unused -> Log.i(TAG, "Appointment type deleted successfully!"))
                 .addOnFailureListener(e -> Log.i(TAG, "Error deleting appointment type: " + e.getMessage()));
+    }
+
+    public static void getAllProductsFromDatabase(Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
+        products.clear(); // reset products array
+
+        database.collection("Products").orderBy("name").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    //save product data from database to products arraylist
+                    Map<String, Object> data = document.getData();
+                    String productName = (String) data.get("name");
+                    String productPrice = data.get("price") + "";
+                    String productDescription = (String) data.get("description");
+                    String productCategory = (String) data.get("category");
+                    String productQuantity = data.get("quantity") + "";
+                    String uid = document.getId();
+                    Product currProduct = new Product(uid, productName, productDescription, productCategory, Double.parseDouble(productPrice), Integer.parseInt(productQuantity)); //creating a new product
+                    products.add(currProduct); //adding product to list
+                }
+                onFinishQueryInterface.onFinishQuery();
+            } else {
+                Log.e(TAG, "Error getting documents: " + task.getException());
+            }
+        });
+    }
+
+    public static void addProductToFirebase(Product product, FragmentActivity currActivity) {
+        database.collection("Products").document(product.getUid()).set(product) //adding user data to database
+                .addOnSuccessListener(unused -> Toast.makeText(currActivity, "Product added/updated successfully!", Toast.LENGTH_SHORT).show()) //Registration successful
+                .addOnFailureListener(e -> Toast.makeText(currActivity, "Product adding/updating failed!", Toast.LENGTH_SHORT).show()); //Registration failed
+    }
+
+    public static void uploadRelevantProductInfo(Product currProduct, FragmentActivity currActivity, StorageReference savedImagePath) {
+        DatabaseUtils.addProductToFirebase(currProduct, currActivity);//add the user to the database
+
+        if (profilePicSelected) {
+            DatabaseUtils.uploadImageToFirebase(savedImagePath, profilePicUri, currActivity);
+            profilePicSelected = false;
+        }
+    }
+
+    public static void deleteProductFromDatabase(Product currProduct) {
+        database.collection("Products").document(currProduct.getUid()).delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Product deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting product: " + e.getMessage()));
+        storageReference.child("Products").child(currProduct.getUid()).child("profile.jpg").delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Product image deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting product image: " + e.getMessage()));
     }
 }

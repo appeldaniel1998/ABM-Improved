@@ -39,9 +39,7 @@ public class AddNewClientFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
             } else { // Create new client, add to database and upload profile pic
                 String currClientUid = UUID.randomUUID().toString(); // Creating UID for the new user
-
                 Client userToAdd = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DatePicker.stringToInt(birthdayStr), currClientUid, false); //creating a new client
-
                 DatabaseUtils.uploadRelevantClientInfo(userToAdd,
                         requireActivity(),
                         FirebaseStorage.getInstance().getReference().child("Clients").child(currClientUid).child("profile.jpg"));

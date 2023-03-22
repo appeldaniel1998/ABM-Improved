@@ -3,7 +3,6 @@ package com.example.abm_improved.Products.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,7 +66,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
         //This method is called when the recycler view is created and it binds the view holder to the data
         Product currProduct = this.products.get(position);
         holder.productName.setText(currProduct.getName());
-        holder.productQuantity.setText(currProduct.getQuantity());
+        holder.productQuantity.setText(String.valueOf(currProduct.getQuantity()));
     }
 
 

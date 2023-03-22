@@ -2,7 +2,6 @@ package com.example.abm_improved.LoginAndRegister;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.Interfaces;
-import com.example.abm_improved.Utils.Interfaces.OnFinishQueryInterface;
 
 public class LoginFragment extends BaseFragment {
 
@@ -38,7 +36,7 @@ public class LoginFragment extends BaseFragment {
 
             // Basic XML fields
             Button loginButton = view.findViewById(R.id.loginButton);
-            Button registerButton = view.findViewById(R.id.registerButton);
+            Button registerButton = view.findViewById(R.id.doneButton);
             EditText emailEditText = view.findViewById(R.id.emailEditText);
             EditText passwordEditText = view.findViewById(R.id.passwordEditText);
             requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.GONE);

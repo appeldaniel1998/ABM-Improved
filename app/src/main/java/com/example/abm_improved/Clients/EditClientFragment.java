@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.DataClasses.Client;
@@ -16,13 +17,16 @@ import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.DatePicker;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 public class EditClientFragment extends BaseFragment {
 
     EnterClientDetails enterClientDetails;
+    StorageReference profilePicReference;
 
-        @Override
+
+    @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                 Bundle savedInstanceState) {
             // Inflate the layout for this fragment
@@ -35,6 +39,8 @@ public class EditClientFragment extends BaseFragment {
             Client currClient = DatabaseUtils.getClients().get(clientIndex);
 
             enterClientDetails = new EnterClientDetails(view, onChooseProfilePicListener, requireActivity(), EnterClientDetails.EDIT_CLIENT);
+            profilePicReference = FirebaseStorage.getInstance().getReference().child("Clients").child(currClient.getUid()).child("profile.jpg");
+
             requireActivity().setTitle("Edit Client");
             enterClientDetails.setValuesToXmlFields(currClient);
 
@@ -51,12 +57,15 @@ public class EditClientFragment extends BaseFragment {
                     Client updatedClient = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DatePicker.stringToInt(birthdayStr), currClient.getUid(), false); // creating a new client
                     DatabaseUtils.uploadRelevantClientInfo(updatedClient,
                             requireActivity(),
-                            FirebaseStorage.getInstance().getReference().child("Clients").child(currClient.getUid()).child("profile.jpg"));
+                            profilePicReference);
 
                     // if successful, go back to the previous fragment
                     requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClientsMainFragment()).commit();
                 }
             });
+
+            //Connecting with Firebase storage and retrieving image
+            DatabaseUtils.loadImageToImageView(profilePicReference, enterClientDetails.getProfilePicImageView(), requireActivity());
 
             enterClientDetails.getDeleteButton().setOnClickListener(v -> {
                 //Ask for confirmation before deleting the client

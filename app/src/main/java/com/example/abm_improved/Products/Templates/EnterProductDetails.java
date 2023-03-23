@@ -12,6 +12,7 @@ import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class EnterProductDetails {
 
@@ -55,6 +56,16 @@ public class EnterProductDetails {
                 this.productQuantityEditText.setText(String.valueOf(quantity));
             }
         });
+    }
+
+    public void setProductDetails(Product product, FragmentActivity currActivity) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Products").child(product.getUid()).child("profile.jpg");
+        this.productNameEditText.setText(product.getName());
+        this.productDescriptionEditText.setText(product.getDescription());
+        this.productCategoryEditText.setText(product.getCategory());
+        this.productPriceEditText.setText(String.valueOf(product.getPrice()));
+        this.productQuantityEditText.setText(String.valueOf(product.getQuantity()));
+        DatabaseUtils.loadImageToImageView(storageReference, this.productImage, currActivity);
     }
 
     public Button getAddProductButton() {

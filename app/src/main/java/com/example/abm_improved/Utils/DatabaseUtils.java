@@ -7,12 +7,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
 import androidx.fragment.app.FragmentActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.Clients.ClientsMainFragment;
@@ -44,6 +46,7 @@ public class DatabaseUtils {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<AppointmentType> appointmentTypes = new ArrayList<>();
     private static ArrayList<Product> products = new ArrayList<>();
+    private static boolean currentUserIsManager = false;
 
     public static ArrayList<Client> getClients() {
         return clients;
@@ -58,7 +61,18 @@ public class DatabaseUtils {
     }
 
     public static boolean userLoggedIn() {
-        return auth.getCurrentUser() != null;
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            String uid = auth.getCurrentUser().getUid();
+            database.collection("Clients").document(uid).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Map<String, Object> user = task.getResult().getData();
+                    assert user != null;
+                    currentUserIsManager = (boolean) user.get("manager");
+                }
+            });
+        }
+        return currentUser != null;
     }
 
     public static void loginUser(String email, String password, LoginFragment currFragment, Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
@@ -226,12 +240,22 @@ public class DatabaseUtils {
         }
     }
 
-    public static void deleteProductFromDatabase(Product currProduct) {
-        database.collection("Products").document(currProduct.getUid()).delete()
+    public static void deleteProductFromDatabase(String productUid) {
+        database.collection("Products").document(productUid).delete()
                 .addOnSuccessListener(unused -> Log.i(TAG, "Product deleted successfully!"))
                 .addOnFailureListener(e -> Log.i(TAG, "Error deleting product: " + e.getMessage()));
-        storageReference.child("Products").child(currProduct.getUid()).child("profile.jpg").delete()
+        storageReference.child("Products").child(productUid).child("profile.jpg").delete()
                 .addOnSuccessListener(unused -> Log.i(TAG, "Product image deleted successfully!"))
                 .addOnFailureListener(e -> Log.i(TAG, "Error deleting product image: " + e.getMessage()));
+    }
+
+    public static void loadImageToImageView(StorageReference profilePicReference, ImageView imageView, FragmentActivity currActivity) {
+        profilePicReference.getDownloadUrl().addOnSuccessListener(uri -> {
+            Toast.makeText(currActivity, "downloaded!", Toast.LENGTH_SHORT).show();
+            Glide.with(currActivity).load(uri).into(imageView);
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Failed to load image! " +e.getMessage());
+            //failed probably due to the profile pic not existing (was not uploaded)
+        });
     }
 }

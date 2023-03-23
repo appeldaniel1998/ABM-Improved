@@ -74,10 +74,10 @@ public class ProductsMainFragment extends BaseFragment {
                 // Pass to the next fragment ---------->
                 // Create a new instance of the next fragment and set its arguments
                 Bundle args = new Bundle();
-                args.putString("productIndex", position + ""); // The uid of the client is passed to the next fragment
-//                EditClientFragment fragment = new EditClientFragment(); //todo
-//                fragment.setArguments(args);
-//                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                args.putString("productIndex", String.valueOf(position)); // The uid of the client is passed to the next fragment
+                EditProductFragment fragment = new EditProductFragment(); //todo
+                fragment.setArguments(args);
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
                 // <--------------------------
             });
         }

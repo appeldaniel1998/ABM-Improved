@@ -25,12 +25,8 @@ public class LoginFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        if (DatabaseUtils.userLoggedIn()) { // if user is already logged in, move to appointments main activity
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, new AppointmentsMainFragment());
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+        if (DatabaseUtils.userLoggedIn()) { // if user is already logged in, move to appointments main fragment
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsMainFragment()).addToBackStack(null).commit();
         } else { // if user is not logged in, show login screen
             requireActivity().setTitle("Login");
 

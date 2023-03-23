@@ -35,11 +35,11 @@ public class AddNewProductFragment extends BaseFragment {
             DatabaseUtils.uploadRelevantProductInfo(product,
                     requireActivity(),
                     FirebaseStorage.getInstance().getReference().child("Products").child(product.getUid()).child("profile.jpg"));
+
+            // if successful, go back to the previous fragment
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductsMainFragment()).commit();
         });
 
-//        enterProductDetails.getDeleteProductButton().setOnClickListener(v -> {
-//            DatabaseUtils.deleteProductFromDatabase(DatabaseUtils.getProducts().get(0));
-//        });
 
         return view;
     }

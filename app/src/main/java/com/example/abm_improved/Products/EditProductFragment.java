@@ -28,7 +28,7 @@ public class EditProductFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.templates_enter_product_details, container, false);
 
         enterProductDetails = new EnterProductDetails(view, onChooseProfilePicListener, requireActivity());
-        requireActivity().setTitle("Add New Product");
+        requireActivity().setTitle("Edit Product");
 
         // Getting index of current client from previous fragment
         Bundle args = getArguments();

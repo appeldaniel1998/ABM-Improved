@@ -5,31 +5,23 @@ import static com.example.abm_improved.BaseActivity.profilePicUri;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.collection.ArraySet;
 import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.abm_improved.Appointments.AppointmentsMainFragment;
 import com.example.abm_improved.BaseActivity;
-import com.example.abm_improved.Clients.ClientsMainFragment;
+import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.DataClasses.AppointmentType;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.DataClasses.Product;
 import com.example.abm_improved.LoginAndRegister.LoginFragment;
-import com.example.abm_improved.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -46,6 +38,7 @@ public class DatabaseUtils {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<AppointmentType> appointmentTypes = new ArrayList<>();
     private static ArrayList<Product> products = new ArrayList<>();
+    private static ArrayList<Appointment> appointments = new ArrayList<>();
     private static boolean currentUserIsManager = false;
 
     public static ArrayList<Client> getClients() {
@@ -58,6 +51,10 @@ public class DatabaseUtils {
 
     public static ArrayList<Product> getProducts() {
         return products;
+    }
+
+    public static ArrayList<Appointment> getAppointments() {
+        return appointments;
     }
 
     public static boolean userLoggedIn() {
@@ -257,5 +254,49 @@ public class DatabaseUtils {
             Log.e(TAG, "Failed to load image! " +e.getMessage());
             //failed probably due to the profile pic not existing (was not uploaded)
         });
+    }
+
+    public static void addAppointmentToDatabase(Appointment newAppointment) {
+        database.collection("Appointments").document(newAppointment.getDate()).collection("AppointmentsPerDate").document(newAppointment.getUid()).set(newAppointment) //adding appointment data to database
+                .addOnSuccessListener(unused -> Log.i(TAG, "Appointment added successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error adding appointment: " + e.getMessage()));
+    }
+
+    public static void deleteAppointmentFromDatabase(Appointment currAppointment) {
+        database.collection("Appointments").document(currAppointment.getDate()).collection("AppointmentsPerDate").document(currAppointment.getUid()).delete()
+                .addOnSuccessListener(unused -> Log.i(TAG, "Appointment deleted successfully!"))
+                .addOnFailureListener(e -> Log.i(TAG, "Error deleting appointment: " + e.getMessage()));
+    }
+
+    public static void getAllAppointmentsFromDatabase(Interfaces.OnFinishQueryInterface onFinishQueryInterface) {
+        appointments.clear(); // reset appointments array
+
+        database.collectionGroup("AppointmentsPerDate").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    //save appointment data from database to appointments arraylist
+                    Map<String, Object> data = document.getData();
+                    String date = (String) data.get("date");
+                    String time = (String) data.get("time");
+                    String clientUid = (String) data.get("clientUid");
+                    String appointmentTypeUid = (String) data.get("appointmentTypeUid");
+                    String uid = document.getId();
+                    Appointment currAppointment = new Appointment(uid, clientUid, appointmentTypeUid, date, time); //creating a new appointment
+                    appointments.add(currAppointment); //adding appointment to list
+                }
+                onFinishQueryInterface.onFinishQuery();
+            } else {
+                Log.e(TAG, "Error getting documents: " + task.getException());
+            }
+        });
+    }
+
+    public static AppointmentType findAppointmentType(String appointmentTypeUid) {
+        for (AppointmentType currAppointmentType : appointmentTypes) {
+            if (currAppointmentType.getUid().equals(appointmentTypeUid)) {
+                return currAppointmentType;
+            }
+        }
+        return null;
     }
 }

@@ -22,13 +22,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.abm_improved.AppointmentTypes.AppointmentTypesMainFragment;
-import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.Appointments.AppointmentsBaseFragment;
 import com.example.abm_improved.Cart.CartMainFragment;
 import com.example.abm_improved.Clients.ClientsMainFragment;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.HistoryAnalytics.HistoryFragment;
 import com.example.abm_improved.LoginAndRegister.LoginFragment;
-import com.example.abm_improved.LoginAndRegister.RegisterFragment;
 import com.example.abm_improved.Products.ProductsMainFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -172,9 +171,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawers(); // close nav drawer
         if (item.getItemId() == R.id.menuItemAppointments) {
             Bundle bundle = new Bundle();
-            AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
-            appointmentsMainFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+            AppointmentsBaseFragment appointmentsBaseFragment = new AppointmentsBaseFragment();
+            appointmentsBaseFragment.setArguments(bundle);
+            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsBaseFragment).addToBackStack(null).commit();
             return true;
         } else if (item.getItemId() == R.id.menuItemAppointmentTypes) {
             Bundle bundle = new Bundle();

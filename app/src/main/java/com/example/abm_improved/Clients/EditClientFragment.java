@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.DatePicker;
+import com.example.abm_improved.Utils.PopupDatePicker;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -54,7 +53,7 @@ public class EditClientFragment extends BaseFragment {
                 if (firstNameStr.isEmpty() || lastNameStr.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    Client updatedClient = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DatePicker.stringToInt(birthdayStr), currClient.getUid(), false); // creating a new client
+                    Client updatedClient = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, PopupDatePicker.stringToInt(birthdayStr), currClient.getUid(), currClient.getManager()); // creating a new client
                     DatabaseUtils.uploadRelevantClientInfo(updatedClient,
                             requireActivity(),
                             profilePicReference);

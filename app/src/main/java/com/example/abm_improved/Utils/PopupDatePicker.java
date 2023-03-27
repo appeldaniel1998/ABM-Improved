@@ -11,7 +11,7 @@ import java.util.Calendar;
  * https://www.youtube.com/watch?v=qCoidM98zNk
  * https://github.com/codeWithCal/DatePickerTutorial/blob/master/app/src/main/java/codewithcal/au/datepickertutorial/MainActivity.java
  */
-public class DatePicker {
+public class PopupDatePicker {
 
     /**
      * Function to return the string representing today's date
@@ -21,10 +21,18 @@ public class DatePicker {
     public static String getTodayDate() {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH); // Jan = 0, so increment by 1 for the sake of understandability
-        month = month + 1;
+        int month = cal.get(Calendar.MONTH) + 1; // Jan = 0, so increment by 1 for the sake of understandability
         int day = cal.get(Calendar.DAY_OF_MONTH);
         return makeDateString(day, month, year);
+    }
+
+    public static int[] getTodayDateAsInts() {
+        int[] date = new int[3];
+        Calendar cal = Calendar.getInstance();
+        date[0] = cal.get(Calendar.YEAR);
+        date[1] = cal.get(Calendar.MONTH) + 1; // Jan = 0, so increment by 1 for the sake of understandability
+        date[2] = cal.get(Calendar.DAY_OF_MONTH);
+        return date;
     }
 
     public static DatePickerDialog initDatePicker(TextView dateTextView, Activity activity) {

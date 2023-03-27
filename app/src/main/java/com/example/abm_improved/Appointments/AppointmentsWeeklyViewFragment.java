@@ -8,16 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
 
-public class AppointmentsMainFragment extends Fragment {
+public class AppointmentsWeeklyViewFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_appointments_main, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_appointments_weekly_view, container, false);
 
-        requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.VISIBLE);
         return view;
     }
 }

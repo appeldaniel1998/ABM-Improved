@@ -1,27 +1,24 @@
 package com.example.abm_improved.Clients;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Adapters.ClientsRecyclerAdapter;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
-import com.example.abm_improved.Utils.Interfaces.OnFinishQueryInterface;
 
-import java.lang.annotation.Inherited;
-
-public class ClientsMainFragment extends Fragment {
+public class ClientsMainFragment extends BaseFragment {
 
     private Button addClientButton;
 

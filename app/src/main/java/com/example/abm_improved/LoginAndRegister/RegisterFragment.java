@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.Appointments.AppointmentsBaseFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.R;
-import com.example.abm_improved.Utils.DatePicker;
+import com.example.abm_improved.Utils.PopupDatePicker;
 
 public class RegisterFragment extends BaseFragment {
 
@@ -40,10 +40,10 @@ public class RegisterFragment extends BaseFragment {
             } else if (!passwordStr.equals(confirmPasswordStr)) {
                 Toast.makeText(getContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             } else {
-                registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, DatePicker.stringToInt(birthdayStr));
+                registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, PopupDatePicker.stringToInt(birthdayStr));
 
                 // Move to appointments main fragment
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsMainFragment()).addToBackStack(null).commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsBaseFragment()).addToBackStack(null).commit();
             }
         });
         return view;

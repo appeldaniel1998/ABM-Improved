@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.abm_improved.BaseFragment;
-import com.example.abm_improved.Clients.ClientsMainFragment;
-import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.DataClasses.Product;
 import com.example.abm_improved.Products.Templates.EnterProductDetails;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.UUID;
 
 public class EditProductFragment extends BaseFragment {
     private EnterProductDetails enterProductDetails;

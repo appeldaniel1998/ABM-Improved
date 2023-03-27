@@ -10,22 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="110"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
+            android:id="@+id/appointmentType"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_weight="40"
-            android:autofillHints="name"
             android:ems="10"
             android:gravity="center_vertical"
-            android:hint="Name"
+            android:hint="Appointment Type"
             android:minHeight="48dp"
             android:textColorHint="#757575"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,16 +34,31 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/email"
-            android:layout_width="0dp"
+            android:id="@+id/date"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_weight="100"
-            android:autofillHints="name"
             android:ems="10"
             android:gravity="center_vertical"
-            android:hint="Email"
+            android:hint="Date"
+            android:minHeight="48dp"
+            android:textColorHint="#757575" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:hint="Time"
             android:minHeight="48dp"
             android:textColorHint="#757575" />
     </LinearLayout>

@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
-import com.example.abm_improved.Utils.DatePicker;
+import com.example.abm_improved.Utils.PopupDatePicker;
 import com.example.abm_improved.Utils.Interfaces;
 
 public class EnterClientDetails {
@@ -67,8 +67,8 @@ public class EnterClientDetails {
         this.confirmPasswordEditText = view.findViewById(R.id.retypePasswordEditText);
         this.onChooseProfilePicListener = onChooseProfilePicListener;
 
-        this.datePickerDialog = DatePicker.initDatePicker(birthdayTextView, activity);
-        this.birthdayTextView.setText(DatePicker.getTodayDate()); // Set initial date to today's date
+        this.datePickerDialog = PopupDatePicker.initDatePicker(birthdayTextView, activity);
+        this.birthdayTextView.setText(PopupDatePicker.getTodayDate()); // Set initial date to today's date
         this.birthdayLinearLayout.setOnClickListener(v -> datePickerDialog.show()); //onclick listener for birthdayLinearLayout to choose a date
 
         this.profilePicImageView.setOnClickListener(v -> {
@@ -141,7 +141,7 @@ public class EnterClientDetails {
         this.emailEditText.setText(client.getEmail());
         this.phoneNumberEditText.setText(client.getPhoneNumber());
         this.addressEditText.setText(client.getAddress());
-        this.birthdayTextView.setText(DatePicker.intToString(client.getBirthdayDate()));
+        this.birthdayTextView.setText(PopupDatePicker.intToString(client.getBirthdayDate()));
 
     }
 }

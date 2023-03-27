@@ -10,10 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.example.abm_improved.Appointments.AppointmentsMainFragment;
+import com.example.abm_improved.Appointments.AppointmentsBaseFragment;
 import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Utils.DatabaseUtils;
@@ -26,7 +23,7 @@ public class LoginFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         if (DatabaseUtils.userLoggedIn()) { // if user is already logged in, move to appointments main fragment
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsMainFragment()).addToBackStack(null).commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsBaseFragment()).addToBackStack(null).commit();
         } else { // if user is not logged in, show login screen
             requireActivity().setTitle("Login");
 
@@ -76,9 +73,9 @@ public class LoginFragment extends BaseFragment {
 
             // move to appointments main activity
             Bundle bundle = new Bundle();
-            AppointmentsMainFragment appointmentsMainFragment = new AppointmentsMainFragment();
-            appointmentsMainFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsMainFragment).addToBackStack(null).commit();
+            AppointmentsBaseFragment appointmentsBaseFragment = new AppointmentsBaseFragment();
+            appointmentsBaseFragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsBaseFragment).addToBackStack(null).commit();
         }
     }
 }

@@ -2,7 +2,6 @@ package com.example.abm_improved.Products;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,13 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.example.abm_improved.AppointmentTypes.AddNewAppointmentTypeFragment;
-import com.example.abm_improved.AppointmentTypes.AppointmentTypesMainFragment;
 import com.example.abm_improved.BaseFragment;
-import com.example.abm_improved.Clients.Adapters.ClientsRecyclerAdapter;
-import com.example.abm_improved.Clients.AddNewClientFragment;
-import com.example.abm_improved.Clients.ClientsMainFragment;
-import com.example.abm_improved.Clients.EditClientFragment;
 import com.example.abm_improved.Products.Adapters.ProductsRecyclerAdapter;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;

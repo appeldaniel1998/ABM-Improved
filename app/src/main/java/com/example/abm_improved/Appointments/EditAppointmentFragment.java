@@ -4,55 +4,46 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.abm_improved.Appointments.Templates.EnterAppointmentDetails;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Appointment;
+import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.Interfaces;
 import com.example.abm_improved.Utils.PopupDatePicker;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
 import java.util.UUID;
 
-public class AddNewAppointmentFragment extends BaseFragment {
-
-    private EnterAppointmentDetails enterAppointmentDetails;
+public class EditAppointmentFragment extends BaseFragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.templates_enter_appointment_details, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.templates_enter_appointment_details, container, false);
 
-        DatabaseUtils.getAllAppointmentTypesFromDatabase(new Interfaces.DoNothing());
-
+        // Getting index of current client from previous fragment
         Bundle args = getArguments();
         assert args != null;
-        int year = -1;
-        int month = -1;
-        int day = -1;
-        if (!args.getString("year").equals("")) {
-            year = Integer.parseInt(args.getString("year"));
-        }
-        if (!args.getString("month").equals("")) {
-            month = Integer.parseInt(args.getString("month"));
-        }
-        if (!args.getString("day").equals("")) {
-            day = Integer.parseInt(args.getString("day"));
-        }
+        int appointmentIndex = Integer.parseInt(args.getString("appointmentIndex"));
+        Appointment currAppointment = DatabaseUtils.getAppointments().get(appointmentIndex);
 
-        enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.ADDING_APPOINTMENT, null);
+        EnterAppointmentDetails enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.EDITING_APPOINTMENT, currAppointment);
 
-        if (year != -1 && month != -1 && day != -1) {
-            enterAppointmentDetails.getAppointmentDateTextView().setText(PopupDatePicker.makeDateString(day, month, year));
-        }
+        Button deleteAppointmentButton = enterAppointmentDetails.getDeleteAppointmentButton();
+        deleteAppointmentButton.setVisibility(View.VISIBLE);
+        deleteAppointmentButton.setOnClickListener(v -> {
+            DatabaseUtils.deleteAppointmentFromDatabase(currAppointment);
+        });
 
         enterAppointmentDetails.getAddAppointmentButton().setOnClickListener(v -> {
             String appointmentType = DatabaseUtils.getAppointmentTypes().get(enterAppointmentDetails.getAppointmentTypeIndexChosen()).getUid();
             String appointmentClient = DatabaseUtils.getClients().get(enterAppointmentDetails.getClientIndexChosen()).getUid();
             String appointmentDate = PopupDatePicker.stringToInt(enterAppointmentDetails.getAppointmentDateTextView().getText().toString()) + "";
             String appointmentTime = PopupTimePicker.StringToInt(enterAppointmentDetails.getAppointmentTimeTextView().getText().toString()) + "";
-            String uid = UUID.randomUUID().toString();
+            String uid = currAppointment.getUid();
 
             Appointment appointment = new Appointment(uid, appointmentClient, appointmentType, appointmentDate, appointmentTime);
             DatabaseUtils.addAppointmentToDatabase(appointment);
@@ -60,5 +51,4 @@ public class AddNewAppointmentFragment extends BaseFragment {
 
         return view;
     }
-
 }

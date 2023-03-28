@@ -299,4 +299,13 @@ public class DatabaseUtils {
         }
         return null;
     }
+
+    public static Client findClient(String clientUid) {
+        for (Client currClient : clients) {
+            if (currClient.getUid().equals(clientUid)) {
+                return currClient;
+            }
+        }
+        return null;
+    }
 }

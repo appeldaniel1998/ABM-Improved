@@ -54,7 +54,13 @@ public class AppointmentsListViewFragment extends BaseFragment {
         DatabaseUtils.getAllAppointmentsFromDatabase(new OnGetAllAppointments());
 
         addAppointmentButton.setOnClickListener(v -> {
-//            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddNewClientFragment()).addToBackStack(null).commit();
+            Bundle bundle = new Bundle();
+            bundle.putString("year","");
+            bundle.putString("month", "");
+            bundle.putString("day", "");
+            AddNewAppointmentFragment fragment = new AddNewAppointmentFragment();
+            fragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
         });
         return view;
     }
@@ -67,17 +73,17 @@ public class AppointmentsListViewFragment extends BaseFragment {
 
             progressBar.setVisibility(View.GONE); // disable loading screen
 
-//            //onclick of each item in the recycle view (client in the list)
-//            recyclerViewAdapter.setOnItemClickListener(position -> {
-//                // Pass to the next fragment ---------->
-//                // Create a new instance of the next fragment and set its arguments
-//                Bundle args = new Bundle();
-//                args.putString("clientIndex", position + ""); // The uid of the client is passed to the next fragment
-//                EditClientFragment fragment = new EditClientFragment();
-//                fragment.setArguments(args);
-//                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-//                // <--------------------------
-//            });
+            //onclick of each item in the recycle view (client in the list)
+            recyclerViewAdapter.setOnItemClickListener(position -> {
+                // Pass to the next fragment ---------->
+                // Create a new instance of the next fragment and set its arguments
+                Bundle args = new Bundle();
+                args.putString("appointmentIndex", position + ""); // The uid of the client is passed to the next fragment
+                EditAppointmentFragment fragment = new EditAppointmentFragment();
+                fragment.setArguments(args);
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                // <--------------------------
+            });
         }
     }
 }

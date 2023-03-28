@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.DataClasses.AppointmentType;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
@@ -42,7 +43,14 @@ public class EnterAppointmentDetails {
     private int clientIndexChosen = -1;
     private int appointmentTypeIndexChosen = -1;
 
-    public EnterAppointmentDetails(View view, FragmentActivity activity) {
+    public static final int ADDING_APPOINTMENT = 0;
+    public static final int EDITING_APPOINTMENT = 1;
+
+    private int addOrEdit;
+
+    private Appointment currAppointment;
+
+    public EnterAppointmentDetails(View view, FragmentActivity activity, int addOrEdit, Appointment currAppointment) {
         this.appointmentTypeEditText = view.findViewById(R.id.appointmentTypeEditText);
         this.clientNameEditText = view.findViewById(R.id.clientNameEditText);
         this.appointmentDateTextView = view.findViewById(R.id.datePlaceholder);
@@ -52,6 +60,8 @@ public class EnterAppointmentDetails {
         this.timeLinearLayout = view.findViewById(R.id.timeLinearLayout);
         this.dateLinearLayout = view.findViewById(R.id.dateLinearLayout);
         this.currentActivity = activity;
+        this.addOrEdit = addOrEdit;
+        this.currAppointment = currAppointment;
 
         this.datePickerDialog = PopupDatePicker.initDatePicker(appointmentDateTextView, activity);
         this.appointmentDateTextView.setText(PopupDatePicker.getTodayDate()); // Set initial date to today's date
@@ -64,6 +74,15 @@ public class EnterAppointmentDetails {
 
         DatabaseUtils.getAllAppointmentTypesFromDatabase(new OnGetAllAppointmentTypes()); // Get all appointment types from the database and set the drop down menu (in OnGetAllAppointmentTypes)
         DatabaseUtils.getAllClientsFromDatabase(new OnGetAllClients()); // Get all client names from the database and set the drop down menu (in OnGetAllClients)
+
+        if (addOrEdit == EDITING_APPOINTMENT) {
+            setFields();
+        }
+    }
+
+    public void setFields() {
+        this.appointmentDateTextView.setText(PopupDatePicker.intToString(Integer.parseInt(currAppointment.getDate())));
+        this.appointmentTimeTextView.setText(PopupTimePicker.getTimeString(Integer.parseInt(currAppointment.getTime())));
     }
 
     public Button getAddAppointmentButton() {
@@ -72,14 +91,6 @@ public class EnterAppointmentDetails {
 
     public Button getDeleteAppointmentButton() {
         return deleteAppointmentButton;
-    }
-
-    public EditText getAppointmentTypeEditText() {
-        return appointmentTypeEditText;
-    }
-
-    public EditText getClientNameEditText() {
-        return clientNameEditText;
     }
 
     public TextView getAppointmentTimeTextView() {
@@ -107,6 +118,10 @@ public class EnterAppointmentDetails {
                 appointmentTypesAsStrings.add(appointmentTypes.get(i).getTypeName());
             }
 
+            if (addOrEdit == EDITING_APPOINTMENT) { //if editing, set the fields to the current appointment's values
+                appointmentTypeEditText.setText(DatabaseUtils.findAppointmentType(currAppointment.getAppointmentTypeUid()).getTypeName());
+            }
+
             appointmentTypeEditText.setAdapter(new ArrayAdapter<>(currentActivity, R.layout.templates_dropdown_menu_list_item, appointmentTypesAsStrings));
 
             appointmentTypeEditText.setOnItemClickListener((parent, view, position, id) -> appointmentTypeIndexChosen = position);
@@ -120,6 +135,10 @@ public class EnterAppointmentDetails {
             ArrayList<Client> appointmentTypes = DatabaseUtils.getClients();
             for (int i = 0; i < appointmentTypes.size(); i++) { // Retrieve all appointment type names as strings from the array list of appointment types (as objects)
                 clientNamesAsStrings.add(appointmentTypes.get(i).getFullName());
+            }
+
+            if (addOrEdit == EDITING_APPOINTMENT) { //if editing, set the fields to the current appointment's values
+                clientNameEditText.setText(DatabaseUtils.findClient(currAppointment.getClientUid()).getFullName());
             }
 
             clientNameEditText.setAdapter(new ArrayAdapter<>(currentActivity, R.layout.templates_dropdown_menu_list_item, clientNamesAsStrings));

@@ -27,9 +27,7 @@ public class EnterAppointmentDetails {
 
     private final AutoCompleteTextView appointmentTypeEditText;
     private final AutoCompleteTextView clientNameEditText;
-    private final LinearLayout timeLinearLayout;
     private final TextView appointmentTimeTextView;
-    private final LinearLayout dateLinearLayout;
     private final TextView appointmentDateTextView;
     private final Button addAppointmentButton;
     private final Button deleteAppointmentButton;
@@ -57,17 +55,17 @@ public class EnterAppointmentDetails {
         this.appointmentTimeTextView = view.findViewById(R.id.timePlaceholder);
         this.addAppointmentButton = view.findViewById(R.id.doneButton);
         this.deleteAppointmentButton = view.findViewById(R.id.deleteButton);
-        this.timeLinearLayout = view.findViewById(R.id.timeLinearLayout);
-        this.dateLinearLayout = view.findViewById(R.id.dateLinearLayout);
+        LinearLayout timeLinearLayout = view.findViewById(R.id.timeLinearLayout);
+        LinearLayout dateLinearLayout = view.findViewById(R.id.dateLinearLayout);
         this.currentActivity = activity;
         this.addOrEdit = addOrEdit;
         this.currAppointment = currAppointment;
 
         this.datePickerDialog = PopupDatePicker.initDatePicker(appointmentDateTextView, activity);
         this.appointmentDateTextView.setText(PopupDatePicker.getTodayDate()); // Set initial date to today's date
-        this.dateLinearLayout.setOnClickListener(v -> datePickerDialog.show()); //onclick listener for birthdayLinearLayout to choose a date
+        dateLinearLayout.setOnClickListener(v -> datePickerDialog.show()); //onclick listener for birthdayLinearLayout to choose a date
 
-        this.timeLinearLayout.setOnClickListener(v -> {
+        timeLinearLayout.setOnClickListener(v -> {
             timePicker = new PopupTimePicker(activity, appointmentTimeTextView);
         });
         PopupTimePicker.setCurrentTime(appointmentTimeTextView); // Set initial time to current time
@@ -119,7 +117,8 @@ public class EnterAppointmentDetails {
             }
 
             if (addOrEdit == EDITING_APPOINTMENT) { //if editing, set the fields to the current appointment's values
-                appointmentTypeEditText.setText(DatabaseUtils.findAppointmentType(currAppointment.getAppointmentTypeUid()).getTypeName());
+                appointmentTypeIndexChosen = DatabaseUtils.findAppointmentTypeIndex(currAppointment.getAppointmentTypeUid());
+                appointmentTypeEditText.setText(DatabaseUtils.getAppointmentTypes().get(appointmentTypeIndexChosen).getTypeName());
             }
 
             appointmentTypeEditText.setAdapter(new ArrayAdapter<>(currentActivity, R.layout.templates_dropdown_menu_list_item, appointmentTypesAsStrings));
@@ -138,7 +137,8 @@ public class EnterAppointmentDetails {
             }
 
             if (addOrEdit == EDITING_APPOINTMENT) { //if editing, set the fields to the current appointment's values
-                clientNameEditText.setText(DatabaseUtils.findClient(currAppointment.getClientUid()).getFullName());
+                clientIndexChosen = DatabaseUtils.findClientIndex(currAppointment.getClientUid());
+                clientNameEditText.setText(DatabaseUtils.getClients().get(clientIndexChosen).getFullName());
             }
 
             clientNameEditText.setAdapter(new ArrayAdapter<>(currentActivity, R.layout.templates_dropdown_menu_list_item, clientNamesAsStrings));

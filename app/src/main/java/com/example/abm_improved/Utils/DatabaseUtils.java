@@ -258,7 +258,9 @@ public class DatabaseUtils {
 
     public static void addAppointmentToDatabase(Appointment newAppointment) {
         database.collection("Appointments").document(newAppointment.getDate()).collection("AppointmentsPerDate").document(newAppointment.getUid()).set(newAppointment) //adding appointment data to database
-                .addOnSuccessListener(unused -> Log.i(TAG, "Appointment added successfully!"))
+                .addOnSuccessListener(unused -> {
+                    Log.i(TAG, "Appointment added successfully!");
+                })
                 .addOnFailureListener(e -> Log.i(TAG, "Error adding appointment: " + e.getMessage()));
     }
 
@@ -307,5 +309,23 @@ public class DatabaseUtils {
             }
         }
         return null;
+    }
+
+    public static int findAppointmentTypeIndex(String appointmentTypeUid) {
+        for (int i = 0; i < appointmentTypes.size(); i++) {
+            if (appointmentTypes.get(i).getUid().equals(appointmentTypeUid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int findClientIndex(String clientUid) {
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).getUid().equals(clientUid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

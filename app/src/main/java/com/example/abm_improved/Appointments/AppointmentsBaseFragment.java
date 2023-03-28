@@ -11,11 +11,20 @@ import android.view.ViewGroup;
 
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
+import com.example.abm_improved.Utils.DatabaseUtils;
+import com.example.abm_improved.Utils.Interfaces;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 public class AppointmentsBaseFragment extends BaseFragment {
+
+    private static final String TAG = "AppointmentsBaseFragment";
+    private static final int LAST_FRAGMENT_SELECTED_MONTHLY = 0;
+    private static final int LAST_FRAGMENT_SELECTED_WEEKLY = 1;
+    private static final int LAST_FRAGMENT_SELECTED_LIST = 2;
+
+    private int lastFragmentSelected = LAST_FRAGMENT_SELECTED_MONTHLY;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,13 +34,14 @@ public class AppointmentsBaseFragment extends BaseFragment {
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottom_navigation);
         onBottomNavBarClickListener(bottomNavigationView);
 
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        insertNestedFragment(new AppointmentsMonthlyViewFragment());
+        if (lastFragmentSelected == LAST_FRAGMENT_SELECTED_MONTHLY) insertNestedFragment(new AppointmentsMonthlyViewFragment());
+        else if (lastFragmentSelected == LAST_FRAGMENT_SELECTED_WEEKLY) insertNestedFragment(new AppointmentsWeeklyViewFragment());
+        else if (lastFragmentSelected == LAST_FRAGMENT_SELECTED_LIST) insertNestedFragment(new AppointmentsListViewFragment());
     }
 
     // Embeds the child fragment dynamically
@@ -43,10 +53,13 @@ public class AppointmentsBaseFragment extends BaseFragment {
     public void onBottomNavBarClickListener(BottomNavigationView bottomNavigationView) {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.menuItemMonthly) {
+                lastFragmentSelected = LAST_FRAGMENT_SELECTED_MONTHLY;
                 insertNestedFragment(new AppointmentsMonthlyViewFragment());
             } else if (item.getItemId() == R.id.menuItemWeekly) {
+                lastFragmentSelected = LAST_FRAGMENT_SELECTED_WEEKLY;
                 insertNestedFragment(new AppointmentsWeeklyViewFragment());
             } else if (item.getItemId() == R.id.menuItemList) {
+                lastFragmentSelected = LAST_FRAGMENT_SELECTED_LIST;
                 insertNestedFragment(new AppointmentsListViewFragment());
             }
             return true;

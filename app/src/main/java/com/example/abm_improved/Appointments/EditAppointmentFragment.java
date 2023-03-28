@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.abm_improved.Appointments.Templates.EnterAppointmentDetails;
 import com.example.abm_improved.BaseFragment;
@@ -47,6 +48,7 @@ public class EditAppointmentFragment extends BaseFragment {
 
             Appointment appointment = new Appointment(uid, appointmentClient, appointmentType, appointmentDate, appointmentTime);
             DatabaseUtils.addAppointmentToDatabase(appointment);
+            Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show();
         });
 
         return view;

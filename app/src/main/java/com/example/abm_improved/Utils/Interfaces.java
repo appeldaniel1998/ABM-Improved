@@ -2,6 +2,8 @@ package com.example.abm_improved.Utils;
 
 import android.widget.ImageView;
 
+import androidx.navigation.NavController;
+
 public class Interfaces {
 
     public interface OnFinishQueryInterface {

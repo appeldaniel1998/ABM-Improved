@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.PopupDatePicker;
@@ -15,7 +18,9 @@ import com.example.abm_improved.Utils.PopupDatePicker;
 public class AppointmentsMonthlyViewFragment extends BaseFragment {
 
     private DatePicker calendar;
-    Button addAppointmentButton;
+    private Button addAppointmentButton;
+
+    private NavController navController;
 
     private int year;
     private int month;
@@ -24,6 +29,8 @@ public class AppointmentsMonthlyViewFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appointments_main, container, false);
+
+        navController = NavHostFragment.findNavController(AppointmentsMonthlyViewFragment.this);
 
         calendar = view.findViewById(R.id.calendar);
         addAppointmentButton = view.findViewById(R.id.add_appointment_button);
@@ -40,14 +47,9 @@ public class AppointmentsMonthlyViewFragment extends BaseFragment {
         });
 
         addAppointmentButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("year", year + "");
-            bundle.putString("month", month + "");
-            bundle.putString("day", day + "");
-            AddNewAppointmentFragment fragment = new AddNewAppointmentFragment();
-            fragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+            navController.navigate(AppointmentsMonthlyViewFragmentDirections.actionAppointmentsMonthlyViewFragmentToAddNewAppointmentFragment(year, month, day));
         });
+
         return view;
     }
 }

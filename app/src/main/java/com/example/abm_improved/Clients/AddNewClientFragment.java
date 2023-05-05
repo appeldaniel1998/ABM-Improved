@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.DataClasses.Client;
@@ -21,12 +24,15 @@ public class AddNewClientFragment extends BaseFragment {
 
     private EnterClientDetails enterClientDetails;
 
+    NavController navController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.templates_enter_client_details, container, false);
 
         enterClientDetails = new EnterClientDetails(view, onChooseProfilePicListener, requireActivity(), EnterClientDetails.ADD_CLIENT);
-        requireActivity().setTitle("Add New Client");
+
+        navController = NavHostFragment.findNavController(AddNewClientFragment.this);
 
         enterClientDetails.getRegisterButton().setOnClickListener(v -> {
             String firstNameStr = enterClientDetails.getFirstNameEditText().getText().toString();
@@ -45,7 +51,7 @@ public class AddNewClientFragment extends BaseFragment {
                         FirebaseStorage.getInstance().getReference().child("Clients").child(currClientUid).child("profile.jpg"));
 
                 // if successful, go back to the previous fragment
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClientsMainFragment()).addToBackStack(null).commit();
+                navController.popBackStack();
             }
         });
 

@@ -1,5 +1,6 @@
 package com.example.abm_improved;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,22 +14,17 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
-import com.example.abm_improved.AppointmentTypes.AppointmentTypesMainFragment;
-import com.example.abm_improved.Appointments.AppointmentsBaseFragment;
-import com.example.abm_improved.Cart.CartMainFragment;
-import com.example.abm_improved.Clients.ClientsMainFragment;
 import com.example.abm_improved.DataClasses.Client;
-import com.example.abm_improved.HistoryAnalytics.HistoryFragment;
-import com.example.abm_improved.LoginAndRegister.LoginFragment;
-import com.example.abm_improved.Products.ProductsMainFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,11 +34,14 @@ import com.google.firebase.storage.StorageReference;
 
 import com.example.abm_improved.Utils.Interfaces.*;
 
+import java.util.Objects;
+import java.util.Set;
+
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnChooseProfilePicListener {
 
     // For menu side bar
     private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
+    public DrawerLayout drawerLayout;
     // ------------------------
 
     // For Firebase Access
@@ -58,19 +57,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     public static Uri profilePicUri;
     // ------------------------
 
+    public NavController navController;
+    public AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        initMenuSideBar();
 
-        //load default fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new LoginFragment());
-        fragmentTransaction.commit();
-        setFilePicker();
+        navController = NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)));
+        initMenuSideBar();
     }
 
     private void setFilePicker() {
@@ -86,21 +82,27 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    public void setToolbarTitle(String title) {
-        toolbar.setTitle(title);
-    }
-
     public void initMenuSideBar() {
         toolbar = findViewById(R.id.toolbar); // init toolbar
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setItemIconTintList(null); //make icons in nav drawer colourful (not grayscale)
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openNavDrawer, R.string.closeNavDrawer);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.appointmentsBaseFragment,
+                R.id.appointmentsTypesMainFragment,
+                R.id.productsMainFragment,
+                R.id.clientsMainFragment,
+                R.id.historyFragment,
+                R.id.cartMainFragment,
+                R.id.loginFragment)
+                .setOpenableLayout(drawerLayout).build();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
+
         initMenuHeader(navigationView.getMenu());
     }
 
@@ -123,9 +125,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 TextView name = findViewById(R.id.nameMenuHeader);
                 if (currUser != null) {
                     //Toggle visibility for menu items in accordance to whether the user is a client or a manager
-                    MenuItem cart = menu.findItem(R.id.menuItemCart);
-                    MenuItem clients = menu.findItem(R.id.menuItemClients);
-                    MenuItem appointmentTypes = menu.findItem(R.id.menuItemAppointmentTypes);
+                    MenuItem cart = menu.findItem(R.id.cartMainFragment);
+                    MenuItem clients = menu.findItem(R.id.clientsMainFragment);
+                    MenuItem appointmentTypes = menu.findItem(R.id.appointmentsTypesMainFragment);
                     if (currUser.getManager()) { // A manager
                         // remove any page which a client can get no access to
                         cart.setVisible(false);
@@ -142,7 +144,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                         // show all pages which could have been hidden by a manager
                         cart.setVisible(true);
 
-                        menu.findItem(R.id.menuItemAnalytics).setTitle("History");
+                        menu.findItem(R.id.historyFragment).setTitle("History");
                     }
 
 
@@ -166,58 +168,20 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    // Menu selection
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        drawerLayout.closeDrawers(); // close nav drawer
-        if (item.getItemId() == R.id.menuItemAppointments) {
-            Bundle bundle = new Bundle();
-            AppointmentsBaseFragment appointmentsBaseFragment = new AppointmentsBaseFragment();
-            appointmentsBaseFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsBaseFragment).addToBackStack(null).commit();
-            return true;
-        } else if (item.getItemId() == R.id.menuItemAppointmentTypes) {
-            Bundle bundle = new Bundle();
-            AppointmentTypesMainFragment appointmentTypesMainFragment = new AppointmentTypesMainFragment();
-            appointmentTypesMainFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentTypesMainFragment).addToBackStack(null).commit();
-            return true;
-        } else if (item.getItemId() == R.id.menuItemProducts) {
-            Bundle bundle = new Bundle();
-            ProductsMainFragment productsMainFragment = new ProductsMainFragment();
-            productsMainFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, productsMainFragment).addToBackStack(null).commit();
-            return true;
-        } else if (item.getItemId() == R.id.menuItemClients) {
-            Bundle bundle = new Bundle();
-            ClientsMainFragment clientsMainFragment = new ClientsMainFragment();
-            clientsMainFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, clientsMainFragment).addToBackStack(null).commit();
-            return true;
-        } else if (item.getItemId() == R.id.menuItemAnalytics) {
-            Bundle bundle = new Bundle();
-            HistoryFragment historyFragment = new HistoryFragment();
-            historyFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).addToBackStack(null).commit();
-            return true;
-        } else if (item.getItemId() == R.id.menuItemCart) {
-            Bundle bundle = new Bundle();
-            CartMainFragment cartMainFragment = new CartMainFragment();
-            cartMainFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, cartMainFragment).addToBackStack(null).commit();
-            return true;
-        } else if (item.getItemId() == R.id.menuItemSignOut) {
+        drawerLayout.closeDrawers();
+        if (item.getItemId() == R.id.loginFragment) { // if the "sign out" button is pressed
             auth.signOut();
             if (auth.getCurrentUser() == null) {
                 Toast.makeText(this, "User Signed Out!", Toast.LENGTH_SHORT).show();
+                navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+                navController.navigate(R.id.action_global_loginFragment); // Use the destination ID directly, not the global action
+                return true;
             } else {
                 Toast.makeText(this, "User Signed Out Failed!", Toast.LENGTH_SHORT).show();
             }
-            Bundle bundle = new Bundle();
-            LoginFragment loginFragment = new LoginFragment();
-            loginFragment.setArguments(bundle);
-            this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, loginFragment).addToBackStack(null).commit();
-            return true;
-        } else return false;
+        }
+        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -228,4 +192,13 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         selectedImageAddEditDataFragment = imageView;
         filePicker.launch(intent);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (navController == null) {
+            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        }
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+    }
+
 }

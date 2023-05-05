@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.abm_improved.Appointments.AppointmentsBaseFragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Utils.DatabaseUtils;
@@ -19,11 +21,14 @@ import com.example.abm_improved.Utils.Interfaces;
 
 public class LoginFragment extends BaseFragment {
 
+    BaseActivity baseActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        baseActivity = (BaseActivity) requireActivity();
         if (DatabaseUtils.userLoggedIn()) { // if user is already logged in, move to appointments main fragment
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsBaseFragment()).addToBackStack(null).commit();
+            baseActivity.navController.navigate(R.id.action_loginFragment_to_appointmentsBaseFragment);
         } else { // if user is not logged in, show login screen
             requireActivity().setTitle("Login");
 
@@ -47,7 +52,7 @@ public class LoginFragment extends BaseFragment {
 
             //Register button onclick listener
             registerButton.setOnClickListener(v -> {
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RegisterFragment()).addToBackStack(null).commit();
+                baseActivity.navController.navigate(R.id.action_loginFragment_to_registerFragment);
             });
         }
         return view;
@@ -66,16 +71,12 @@ public class LoginFragment extends BaseFragment {
     private class onUserLoggedIn implements Interfaces.OnFinishQueryInterface {
         @Override
         public void onFinishQuery() {
-            // Upon success,
-            // Init menu sidebar again (to show the correct menu items and user)
-            BaseActivity baseActivity = (BaseActivity) requireActivity();
+            // Upon success, Init menu sidebar again (to show the correct menu items and user)
             baseActivity.initMenuSideBar();
 
             // move to appointments main activity
-            Bundle bundle = new Bundle();
-            AppointmentsBaseFragment appointmentsBaseFragment = new AppointmentsBaseFragment();
-            appointmentsBaseFragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, appointmentsBaseFragment).addToBackStack(null).commit();
+            NavController navController = NavHostFragment.findNavController(LoginFragment.this);
+            navController.navigate(R.id.action_loginFragment_to_appointmentsBaseFragment);
         }
     }
 }

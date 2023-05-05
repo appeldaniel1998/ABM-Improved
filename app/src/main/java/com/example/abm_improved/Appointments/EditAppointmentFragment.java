@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.Appointments.Templates.EnterAppointmentDetails;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Appointment;
@@ -20,15 +23,19 @@ import java.util.UUID;
 
 public class EditAppointmentFragment extends BaseFragment {
 
+    NavController navController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.templates_enter_appointment_details, container, false);
 
+        navController = NavHostFragment.findNavController(EditAppointmentFragment.this);
+
         // Getting index of current client from previous fragment
-        Bundle args = getArguments();
-        assert args != null;
-        int appointmentIndex = Integer.parseInt(args.getString("appointmentIndex"));
+        assert getArguments() != null;
+        EditAppointmentFragmentArgs args = EditAppointmentFragmentArgs.fromBundle(getArguments());
+        int appointmentIndex = args.getAppointmentIndex();
         Appointment currAppointment = DatabaseUtils.getAppointments().get(appointmentIndex);
 
         EnterAppointmentDetails enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.EDITING_APPOINTMENT, currAppointment);
@@ -37,6 +44,7 @@ public class EditAppointmentFragment extends BaseFragment {
         deleteAppointmentButton.setVisibility(View.VISIBLE);
         deleteAppointmentButton.setOnClickListener(v -> {
             DatabaseUtils.deleteAppointmentFromDatabase(currAppointment);
+            navController.popBackStack(); // go back to previous fragment
         });
 
         enterAppointmentDetails.getAddAppointmentButton().setOnClickListener(v -> {
@@ -49,6 +57,8 @@ public class EditAppointmentFragment extends BaseFragment {
             Appointment appointment = new Appointment(uid, appointmentClient, appointmentType, appointmentDate, appointmentTime);
             DatabaseUtils.addAppointmentToDatabase(appointment);
             Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show();
+
+            navController.popBackStack(); // go back to previous fragment
         });
 
         return view;

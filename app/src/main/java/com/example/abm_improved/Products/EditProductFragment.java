@@ -7,29 +7,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.BaseFragment;
+import com.example.abm_improved.Clients.EditClientFragmentArgs;
 import com.example.abm_improved.DataClasses.Product;
 import com.example.abm_improved.Products.Templates.EnterProductDetails;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.example.abm_improved.Products.EditProductFragmentArgs;
 
 public class EditProductFragment extends BaseFragment {
     private EnterProductDetails enterProductDetails;
 
+    NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.templates_enter_product_details, container, false);
 
+        navController = NavHostFragment.findNavController(EditProductFragment.this);
+
         enterProductDetails = new EnterProductDetails(view, onChooseProfilePicListener, requireActivity());
         requireActivity().setTitle("Edit Product");
 
         // Getting index of current client from previous fragment
-        Bundle args = getArguments();
-        assert args != null;
-        int productIndex = Integer.parseInt(args.getString("productIndex"));
+        assert getArguments() != null;
+        EditProductFragmentArgs args = EditProductFragmentArgs.fromBundle(getArguments());
+        int productIndex = args.getProductIndex();
         Product currProduct = DatabaseUtils.getProducts().get(productIndex);
 
         enterProductDetails.setProductDetails(currProduct, requireActivity());
@@ -47,8 +55,7 @@ public class EditProductFragment extends BaseFragment {
                     Integer.parseInt(enterProductDetails.getProductQuantityEditText().getText().toString()));
             DatabaseUtils.uploadRelevantProductInfo(product, requireActivity(), storageReference);
 
-            // if successful, go back to the previous fragment
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductsMainFragment()).commit();
+            navController.popBackStack(); // if successful, go back to the previous fragment
         });
 
         enterProductDetails.getDeleteProductButton().setOnClickListener(v -> {
@@ -59,7 +66,7 @@ public class EditProductFragment extends BaseFragment {
             builder.setPositiveButton("Yes", (dialog, which) -> {
                 if (which == DialogInterface.BUTTON_POSITIVE) { // Confirmation received
                     DatabaseUtils.deleteProductFromDatabase(currProduct.getUid()); // Delete product from database
-                    requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductsMainFragment()).commit(); // Go back to previous fragment
+                    navController.popBackStack(); // Go back to previous fragment
                 }
             });
             builder.setNegativeButton("Cancel", null);

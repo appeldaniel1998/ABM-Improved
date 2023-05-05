@@ -43,7 +43,7 @@ public class RegisterFragment extends BaseFragment {
                 registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, PopupDatePicker.stringToInt(birthdayStr));
 
                 // Move to appointments main fragment
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentsBaseFragment()).addToBackStack(null).commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new AppointmentsBaseFragment()).addToBackStack(null).commit();
             }
         });
         return view;

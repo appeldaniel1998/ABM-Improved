@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.AppointmentTypes.Templates.EnterAppointmentTypeDetails;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.AppointmentType;
@@ -16,6 +19,8 @@ import java.util.UUID;
 
 public class AddNewAppointmentTypeFragment extends BaseFragment {
 
+    private NavController navController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -23,7 +28,7 @@ public class AddNewAppointmentTypeFragment extends BaseFragment {
 
         EnterAppointmentTypeDetails enterAppointmentTypeDetails = new EnterAppointmentTypeDetails(view);
 
-        requireActivity().setTitle("Add New Appointment Type");
+        navController = NavHostFragment.findNavController(AddNewAppointmentTypeFragment.this);
 
         enterAppointmentTypeDetails.getSaveButton().setOnClickListener(v -> {
             String typeName = enterAppointmentTypeDetails.getTypeName().getText().toString();
@@ -36,7 +41,7 @@ public class AddNewAppointmentTypeFragment extends BaseFragment {
             }
             DatabaseUtils.addAppointmentTypeToDatabase(new AppointmentType(typeName, price, duration, uid));
 
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AppointmentTypesMainFragment()).commit();
+            navController.popBackStack(); //an action is available but not used (if animation is needed can be changed)
         });
 
         return view;

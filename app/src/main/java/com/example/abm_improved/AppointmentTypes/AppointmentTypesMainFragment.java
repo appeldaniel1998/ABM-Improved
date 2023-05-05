@@ -3,6 +3,8 @@ package com.example.abm_improved.AppointmentTypes;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,10 +16,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.example.abm_improved.AppointmentTypes.Adapters.AppointmentTypesRecyclerAdapter;
+import com.example.abm_improved.AppointmentTypes.AppointmentTypesMainFragmentDirections;
 import com.example.abm_improved.BaseFragment;
+import com.example.abm_improved.LoginAndRegister.LoginFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
+import com.example.abm_improved.AppointmentTypes.AppointmentTypesMainFragmentDirections;
 
 public class AppointmentTypesMainFragment extends BaseFragment {
 
@@ -29,10 +34,12 @@ public class AppointmentTypesMainFragment extends BaseFragment {
 
     private ProgressBar progressBar;
 
+    private NavController navController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_appointment_types_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_appointment_types_main, container, false);
 
         requireActivity().setTitle("Appointment Types");
         progressBar = requireActivity().findViewById(R.id.progress_bar);
@@ -48,8 +55,10 @@ public class AppointmentTypesMainFragment extends BaseFragment {
 
         DatabaseUtils.getAllAppointmentTypesFromDatabase(new AppointmentTypesMainFragment.OnGetAllAppointmentTypes());
 
+        navController = NavHostFragment.findNavController(AppointmentTypesMainFragment.this);
+
         addAppointmentTypeButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddNewAppointmentTypeFragment()).addToBackStack(null).commit();
+            navController.navigate(AppointmentTypesMainFragmentDirections.actionAppointmentsTypesMainFragmentToAddNewAppointmentTypeFragment()); // move to AddNewAppointmentType fragment
         });
         return view;
     }
@@ -64,14 +73,7 @@ public class AppointmentTypesMainFragment extends BaseFragment {
 
             //onclick of each item in the recycle view (client in the list)
             recyclerViewAdapter.setOnItemClickListener(position -> {
-                // Pass to the next fragment ---------->
-                // Create a new instance of the next fragment and set its arguments
-                Bundle args = new Bundle();
-                args.putString("appointmentTypeIndex", position + ""); // The uid of the client is passed to the next fragment
-                EditAppointmentTypeFragment fragment = new EditAppointmentTypeFragment();
-                fragment.setArguments(args);
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-                // <--------------------------
+                navController.navigate(AppointmentTypesMainFragmentDirections.actionAppointmentsTypesMainFragmentToEditAppointmentTypeFragment(position)); // move to EditAppointmentType fragment
             });
         }
     }

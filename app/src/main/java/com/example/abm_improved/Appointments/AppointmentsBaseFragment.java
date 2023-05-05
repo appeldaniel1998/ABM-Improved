@@ -3,66 +3,86 @@ package com.example.abm_improved.Appointments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
-import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.Interfaces;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 
 public class AppointmentsBaseFragment extends BaseFragment {
 
     private static final String TAG = "AppointmentsBaseFragment";
-    private static final int LAST_FRAGMENT_SELECTED_MONTHLY = 0;
-    private static final int LAST_FRAGMENT_SELECTED_WEEKLY = 1;
-    private static final int LAST_FRAGMENT_SELECTED_LIST = 2;
+    private NavController nestedNavController;
 
-    private int lastFragmentSelected = LAST_FRAGMENT_SELECTED_MONTHLY;
+//    BaseActivity baseActivity = (BaseActivity) requireActivity();
+
+    protected static final int APPOINTMENTS_LIST_VIEW = R.id.appointmentsListViewFragment;
+    protected static final int APPOINTMENTS_WEEKLY_VIEW = R.id.appointmentsWeeklyViewFragment;
+    protected static final int APPOINTMENTS_MONTHLY_VIEW = R.id.appointmentsMonthlyViewFragment;
+//    protected static int lastFragmentId = APPOINTMENTS_MONTHLY_VIEW; //default fragment to show (updated in nav-graph)
+
+    public NavController getNavController() {
+        return nestedNavController;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appointments_base, container, false);
         requireActivity().findViewById(R.id.AppBarLayout).setVisibility(View.VISIBLE); //make toolbar visible
-
-        BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottom_navigation);
-        onBottomNavBarClickListener(bottomNavigationView);
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        if (lastFragmentSelected == LAST_FRAGMENT_SELECTED_MONTHLY) insertNestedFragment(new AppointmentsMonthlyViewFragment());
-        else if (lastFragmentSelected == LAST_FRAGMENT_SELECTED_WEEKLY) insertNestedFragment(new AppointmentsWeeklyViewFragment());
-        else if (lastFragmentSelected == LAST_FRAGMENT_SELECTED_LIST) insertNestedFragment(new AppointmentsListViewFragment());
+        super.onViewCreated(view, savedInstanceState);
+        NavHostFragment nestedNavHostFragment = (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        assert nestedNavHostFragment != null;
+        nestedNavController = nestedNavHostFragment.getNavController();
+        BottomNavigationView navigationView = view.findViewById(R.id.bottom_navigation);
+        navigationView.setItemIconTintList(null); //make icons in nav drawer colourful (not grayscale)
+        NavigationUI.setupWithNavController(navigationView, nestedNavController);
+        handleInnerFragmentsBackButton();
     }
 
-    // Embeds the child fragment dynamically
-    private void insertNestedFragment(BaseFragment fragment) {
-        getChildFragmentManager().beginTransaction().replace(R.id.child_fragment_container, fragment).addToBackStack(null).commit();
-    }
+    private void handleInnerFragmentsBackButton() {
+        // Add the OnDestinationChangedListener in order to handle the back button on non-top-level destinations of the bottom navigation bar
 
-    // Method to initialize the bottom navigation bar onclick listener (on item selected listener)
-    public void onBottomNavBarClickListener(BottomNavigationView bottomNavigationView) {
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.menuItemMonthly) {
-                lastFragmentSelected = LAST_FRAGMENT_SELECTED_MONTHLY;
-                insertNestedFragment(new AppointmentsMonthlyViewFragment());
-            } else if (item.getItemId() == R.id.menuItemWeekly) {
-                lastFragmentSelected = LAST_FRAGMENT_SELECTED_WEEKLY;
-                insertNestedFragment(new AppointmentsWeeklyViewFragment());
-            } else if (item.getItemId() == R.id.menuItemList) {
-                lastFragmentSelected = LAST_FRAGMENT_SELECTED_LIST;
-                insertNestedFragment(new AppointmentsListViewFragment());
+        nestedNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            BaseActivity baseActivity = (BaseActivity) requireActivity();
+            boolean isTopLevelDestination = destination.getId() == APPOINTMENTS_LIST_VIEW || destination.getId() == APPOINTMENTS_WEEKLY_VIEW
+                    || destination.getId() == APPOINTMENTS_MONTHLY_VIEW;
+            if (isTopLevelDestination) {
+                baseActivity.appBarConfiguration = new AppBarConfiguration.Builder(
+                        R.id.appointmentsBaseFragment,
+                        R.id.appointmentsTypesMainFragment,
+                        R.id.productsMainFragment,
+                        R.id.clientsMainFragment,
+                        R.id.historyFragment,
+                        R.id.cartMainFragment,
+                        R.id.loginFragment,
+                        APPOINTMENTS_LIST_VIEW,
+                        APPOINTMENTS_WEEKLY_VIEW,
+                        APPOINTMENTS_MONTHLY_VIEW)
+                        .setOpenableLayout(baseActivity.drawerLayout)
+                        .build();
+                baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            } else {
+                baseActivity.appBarConfiguration = new AppBarConfiguration.Builder(destination.getId())
+                        .build();
+                baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
-            return true;
+            NavigationUI.setupActionBarWithNavController(baseActivity, nestedNavController, baseActivity.appBarConfiguration);
         });
     }
+
 }

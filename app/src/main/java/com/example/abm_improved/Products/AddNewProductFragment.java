@@ -5,6 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Product;
 import com.example.abm_improved.Products.Templates.EnterProductDetails;
@@ -18,12 +21,15 @@ public class AddNewProductFragment extends BaseFragment {
 
     private EnterProductDetails enterProductDetails;
 
+    NavController navController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.templates_enter_product_details, container, false);
 
+        navController = NavHostFragment.findNavController(AddNewProductFragment.this);
+
         enterProductDetails = new EnterProductDetails(view, onChooseProfilePicListener, requireActivity());
-        requireActivity().setTitle("Add New Product");
 
         enterProductDetails.getAddProductButton().setOnClickListener(v -> {
             Product product = new Product(UUID.randomUUID().toString(),
@@ -36,8 +42,7 @@ public class AddNewProductFragment extends BaseFragment {
                     requireActivity(),
                     FirebaseStorage.getInstance().getReference().child("Products").child(product.getUid()).child("profile.jpg"));
 
-            // if successful, go back to the previous fragment
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductsMainFragment()).commit();
+            navController.popBackStack(); // if successful, go back to the previous fragment
         });
 
 

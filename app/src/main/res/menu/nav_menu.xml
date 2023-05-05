@@ -2,31 +2,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Appointments"
-        android:id="@+id/menuItemAppointments"
+        android:id="@+id/appointmentsBaseFragment"
         android:icon="@drawable/calendar"/>
 
     <item android:title="Appointment Types"
-        android:id="@+id/menuItemAppointmentTypes"
+        android:id="@+id/appointmentsTypesMainFragment"
         android:icon="@drawable/calendar"/>
 
     <item android:title="Products"
-        android:id="@+id/menuItemProducts"
+        android:id="@+id/productsMainFragment"
         android:icon="@drawable/products"/>
 
     <item android:title="Clients"
-        android:id="@+id/menuItemClients"
+        android:id="@+id/clientsMainFragment"
         android:icon="@drawable/person_icon"/>
 
     <item android:title="Analytics"
-        android:id="@+id/menuItemAnalytics"
+        android:id="@+id/historyFragment"
         android:icon="@drawable/analytics_icon"/>
 
     <item android:title="Cart"
-        android:id="@+id/menuItemCart"
+        android:id="@+id/cartMainFragment"
         android:icon="@drawable/shopping_cart"/>
 
     <item android:title="Sign Out"
-        android:id="@+id/menuItemSignOut"
+        android:id="@+id/loginFragment"
         android:icon="@drawable/login"/>
 
 </menu>

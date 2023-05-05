@@ -3,6 +3,8 @@ package com.example.abm_improved.Appointments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import com.example.abm_improved.Clients.EditClientFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
+import com.example.abm_improved.Utils.PopupDatePicker;
 
 public class AppointmentsListViewFragment extends BaseFragment {
 
@@ -30,15 +33,16 @@ public class AppointmentsListViewFragment extends BaseFragment {
     private RecyclerView appointmentsRecyclerView;
     private AppointmentsRecyclerAdapter recyclerViewAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
-
     private ProgressBar progressBar;
+    private NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_appointments_list_view, container, false);
 
-        requireActivity().setTitle("Appointments");
+        navController = NavHostFragment.findNavController(AppointmentsListViewFragment.this);
+
         progressBar = requireActivity().findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -54,13 +58,11 @@ public class AppointmentsListViewFragment extends BaseFragment {
         DatabaseUtils.getAllAppointmentsFromDatabase(new OnGetAllAppointments());
 
         addAppointmentButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("year","");
-            bundle.putString("month", "");
-            bundle.putString("day", "");
-            AddNewAppointmentFragment fragment = new AddNewAppointmentFragment();
-            fragment.setArguments(bundle);
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+            int[] todayDate = PopupDatePicker.getTodayDateAsInts(); // get today's date as ints (3 ints in the array)
+            int year = todayDate[0];
+            int month = todayDate[1];
+            int day = todayDate[2];
+            navController.navigate(AppointmentsMonthlyViewFragmentDirections.actionAppointmentsMonthlyViewFragmentToAddNewAppointmentFragment(year, month, day)); // navigate to add new appointment fragment
         });
         return view;
     }
@@ -73,16 +75,9 @@ public class AppointmentsListViewFragment extends BaseFragment {
 
             progressBar.setVisibility(View.GONE); // disable loading screen
 
-            //onclick of each item in the recycle view (client in the list)
+            //onclick of each item in the recycle view (appointment in the list)
             recyclerViewAdapter.setOnItemClickListener(position -> {
-                // Pass to the next fragment ---------->
-                // Create a new instance of the next fragment and set its arguments
-                Bundle args = new Bundle();
-                args.putString("appointmentIndex", position + ""); // The uid of the client is passed to the next fragment
-                EditAppointmentFragment fragment = new EditAppointmentFragment();
-                fragment.setArguments(args);
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-                // <--------------------------
+                navController.navigate(AppointmentsListViewFragmentDirections.actionAppointmentsListViewFragmentToEditAppointmentFragment(position));
             });
         }
     }

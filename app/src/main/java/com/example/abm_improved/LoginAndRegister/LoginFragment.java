@@ -30,7 +30,6 @@ public class LoginFragment extends BaseFragment {
         if (DatabaseUtils.userLoggedIn()) { // if user is already logged in, move to appointments main fragment
             baseActivity.navController.navigate(R.id.action_loginFragment_to_appointmentsBaseFragment);
         } else { // if user is not logged in, show login screen
-            requireActivity().setTitle("Login");
 
             // Basic XML fields
             Button loginButton = view.findViewById(R.id.loginButton);

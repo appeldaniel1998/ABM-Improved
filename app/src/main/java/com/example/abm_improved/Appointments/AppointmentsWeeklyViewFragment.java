@@ -18,21 +18,18 @@ import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
 import com.example.abm_improved.Utils.DateUtils;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * This <a href="https://github.com/thellmund/Android-Week-View">library</a> was used to create the week view
+ */
 public class AppointmentsWeeklyViewFragment extends BaseFragment {
 
     private WeekView weekView;
     private CustomWeekViewPagingAdapter weekViewPagingAdapter;
     private int[] currentDateRange; // The current date range being displayed on the week view (3 weeks before and after)
-    private ArrayList<Appointment> inRangeAppointments; // The appointments that are in the current date range
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -41,6 +38,11 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
         weekView = view.findViewById(R.id.weekView);
         weekViewPagingAdapter = new CustomWeekViewPagingAdapter();
         weekView.setAdapter(weekViewPagingAdapter); // Set the adapter for the week view
+
+        // header styling ------------------------------------------------------>
+        weekView.setShowHeaderBottomLine(true); // Show the line at the bottom of the header
+        weekView.setShowHeaderBottomShadow(true);
+        // <-------------------------------------------------------------------
 
         // scroll to first day (sunday) of the current week ----------------->
         Calendar calendar = Calendar.getInstance(); // Get the current date
@@ -54,13 +56,13 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
 
 
         weekView.setHorizontalScrollingEnabled(false); // Disable default horizontal fling/scroll
-        weekView.setOnTouchListener((v, event) -> setNewHorizontalScrolling().onTouchEvent(event)); // Set custom horizontal scrolling
+        setNewHorizontalScrolling(); // Set new horizontal scrolling
 
         DatabaseUtils.getAllAppointmentTypesFromDatabase(new Interfaces.DoNothing());
         DatabaseUtils.getAllClientsFromDatabase(new Interfaces.DoNothing());
         DatabaseUtils.getAllAppointmentsFromDatabase(new AppointmentsWeeklyViewFragment.OnGetAllAppointments());
 
-        currentDateRange = get3WeeksBeforeAndAfterDates(DateUtils.getTodayDateAsInt());
+        currentDateRange = DateUtils.get3WeeksBeforeAndAfterDates(DateUtils.getTodayDateAsInt());
 
         return view;
     }
@@ -68,25 +70,22 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
     /**
      * Creates a new GestureDetector that overrides the WeekView's default horizontal scrolling.
      * Instead of scrolling by flinging, the view will only scroll horizontally when a swipe gesture is detected.
-     *
+     * <p>
      * A swipe gesture is considered to be "more" horizontal than vertical, and is either a swipe to the left (next week)
      * or a swipe to the right (previous week). The threshold for a swipe is determined by the 'swipeThreshold' field.
-     *
-     * @return A GestureDetector with the custom onFling method for the WeekView.
      */
-    private GestureDetector setNewHorizontalScrolling()
-    {
-        int swipeThreshold = 100; // The minimum distance the user has to swipe to trigger a swipe gesture
-        return new GestureDetector(requireActivity(), new GestureDetector.SimpleOnGestureListener() {
+    @SuppressLint("ClickableViewAccessibility")
+    private void setNewHorizontalScrolling() {
+        GestureDetector gestureDetector = new GestureDetector(requireActivity(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 if (Math.abs(velocityX) > Math.abs(velocityY)) { // If the swipe is "more" horizontal than vertical
                     Calendar cal = weekView.getFirstVisibleDate();
-                    if (e1.getX() - e2.getX() > swipeThreshold) { // Swipe left (next week)
+                    if (e1.getX() - e2.getX() > 150) { // Swipe left (next week)
                         cal.add(Calendar.DATE, 7);
                         weekView.scrollToDate(cal);
                         return true;
-                    } else if (e2.getX() - e1.getX() > swipeThreshold) { // Swipe right (previous week)
+                    } else if (e2.getX() - e1.getX() > 150) { // Swipe right (previous week)
                         cal.add(Calendar.DATE, -7);
                         weekView.scrollToDate(cal);
                         return true;
@@ -95,69 +94,27 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
-    }
-
-    /**
-     * This method calculates the first day (Sunday) and the last day (Saturday) of the week,
-     * respectively 3 weeks prior and 3 weeks after a given date.
-     *
-     * <p>
-     * The input is an integer in the yyyymmdd format. The method returns an array of two integers,
-     * where the first integer is the first day of the week from 3 weeks prior to the given date,
-     * and the second integer is the last day of the week from 3 weeks after the given date.
-     * Both the returned dates are also in the yyyymmdd format.
-     * </p>
-     *
-     * <p>
-     * Note: This method assumes that the first day of the week is Sunday and the last day is Saturday.
-     * Adjustments may be needed based on the locale.
-     * </p>
-     *
-     * @param date the date as an integer in the format of yyyymmdd
-     * @return an array of two integers, where the first integer is the date of the first day
-     * of the week from 3 weeks prior to the given date, and the second integer is
-     * the date of the last day of the week from 3 weeks after the given date.
-     * Both dates are in the yyyymmdd format.
-     * @throws DateTimeParseException if the input date cannot be parsed
-     */
-    public int[] get3WeeksBeforeAndAfterDates(int date) {
-        // Convert the date into a string
-        String dateString = Integer.toString(date);
-
-        // Parse the date string into a LocalDate
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate localDate = LocalDate.parse(dateString, formatter);
-
-        // Get the first day of the week, 3 weeks prior
-        LocalDate startDate = localDate.minusWeeks(3)
-                .with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY));
-
-        // Get the last day of the week, 3 weeks after
-        LocalDate endDate = localDate.plusWeeks(3)
-                .with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SATURDAY));
-
-        // Convert the dates back to integers
-        int startInt = Integer.parseInt(startDate.format(formatter));
-        int endInt = Integer.parseInt(endDate.format(formatter));
-
-        return new int[]{startInt, endInt};
+        weekView.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event)); // Set custom horizontal scrolling
     }
 
     private class OnGetAllAppointments implements Interfaces.OnFinishQueryInterface {
         @Override
         public void onFinishQuery() {
-            //todo init recycler views
-            inRangeAppointments = new ArrayList<>();
-            ArrayList<Appointment> appointments = DatabaseUtils.getAppointments();
-            for (Appointment appointment : appointments) {
-                int appointmentDate = Integer.parseInt(appointment.getDate());
-                if (appointmentDate >= currentDateRange[0] && appointmentDate <= currentDateRange[1]) {
-                    appointment.getStartEndTime();
-                    inRangeAppointments.add(appointment);
-                }
-            }
-            weekViewPagingAdapter.submitList(inRangeAppointments);
+            // The appointments that are in the current date range are added to the week view
+            weekViewPagingAdapter.submitList(getAppointmentsBetweenDated(currentDateRange[0], currentDateRange[1]));
 
         }
+    }
+
+    public static ArrayList<Appointment> getAppointmentsBetweenDated(int startDate, int endDate) {
+        ArrayList<Appointment> inRangeAppointments = new ArrayList<>();
+        for (Appointment appointment : DatabaseUtils.getAppointments()) {
+            int appointmentDate = Integer.parseInt(appointment.getDate());
+            if (appointmentDate >= startDate && appointmentDate <= endDate) {
+                appointment.setStartEndTime(); // Set the start and end time of the appointment
+                inRangeAppointments.add(appointment);   // Add the appointment to the list if it's in the date range
+            }
+        }
+        return inRangeAppointments;
     }
 }

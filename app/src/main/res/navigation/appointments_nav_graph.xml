@@ -52,15 +52,6 @@
         android:name="com.example.abm_improved.Appointments.AddNewAppointmentFragment"
         android:label="Add New Appointment"
         tools:layout="@layout/templates_enter_appointment_details">
-        <action
-            android:id="@+id/action_addNewAppointmentFragment_to_appointmentsListViewFragment"
-            app:destination="@id/appointmentsListViewFragment" />
-        <action
-            android:id="@+id/action_addNewAppointmentFragment_to_appointmentsWeeklyViewFragment"
-            app:destination="@id/appointmentsWeeklyViewFragment" />
-        <action
-            android:id="@+id/action_addNewAppointmentFragment_to_appointmentsMonthlyViewFragment"
-            app:destination="@id/appointmentsMonthlyViewFragment" />
         <argument
             android:name="year"
             app:argType="integer" />
@@ -77,15 +68,6 @@
         android:name="com.example.abm_improved.Appointments.EditAppointmentFragment"
         android:label="Edit Appointment"
         tools:layout="@layout/templates_enter_appointment_details">
-        <action
-            android:id="@+id/action_editAppointmentFragment_to_appointmentsMonthlyViewFragment"
-            app:destination="@id/appointmentsMonthlyViewFragment" />
-        <action
-            android:id="@+id/action_editAppointmentFragment_to_appointmentsWeeklyViewFragment"
-            app:destination="@id/appointmentsWeeklyViewFragment" />
-        <action
-            android:id="@+id/action_editAppointmentFragment_to_appointmentsListViewFragment"
-            app:destination="@id/appointmentsListViewFragment" />
         <argument
             android:name="appointmentIndex"
             app:argType="integer" />

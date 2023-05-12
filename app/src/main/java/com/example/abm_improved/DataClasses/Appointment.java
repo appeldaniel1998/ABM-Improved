@@ -61,7 +61,7 @@ public class Appointment {
         return mostSignificantBits | leastSignificantBits;
     }
 
-    public void getStartEndTime() {
+    public void setStartEndTime() {
         startTime = Calendar.getInstance();
         startTime.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
         startTime.set(Calendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);

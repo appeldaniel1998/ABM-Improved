@@ -56,7 +56,6 @@ public class AppointmentsBaseFragment extends BaseFragment {
 
     private void handleInnerFragmentsBackButton() {
         // Add the OnDestinationChangedListener in order to handle the back button on non-top-level destinations of the bottom navigation bar
-
         nestedNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             BaseActivity baseActivity = (BaseActivity) requireActivity();
             boolean isTopLevelDestination = destination.getId() == APPOINTMENTS_LIST_VIEW || destination.getId() == APPOINTMENTS_WEEKLY_VIEW
@@ -77,8 +76,7 @@ public class AppointmentsBaseFragment extends BaseFragment {
                         .build();
                 baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             } else {
-                baseActivity.appBarConfiguration = new AppBarConfiguration.Builder(destination.getId())
-                        .build();
+                baseActivity.appBarConfiguration = new AppBarConfiguration.Builder(destination.getId()).build();
                 baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
             NavigationUI.setupActionBarWithNavController(baseActivity, nestedNavController, baseActivity.appBarConfiguration);

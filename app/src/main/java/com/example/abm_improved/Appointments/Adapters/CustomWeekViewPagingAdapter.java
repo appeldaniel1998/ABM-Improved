@@ -1,13 +1,12 @@
 package com.example.abm_improved.Appointments.Adapters;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.alamkanak.weekview.WeekViewEntity;
-import com.alamkanak.weekview.PublicApi;
 import com.alamkanak.weekview.WeekView;
+import com.example.abm_improved.Appointments.AppointmentsWeeklyViewFragment;
 import com.example.abm_improved.DataClasses.Appointment;
+import com.example.abm_improved.Utils.DateUtils;
 
 import java.util.Calendar;
 
@@ -28,8 +27,12 @@ public class CustomWeekViewPagingAdapter extends WeekView.PagingAdapter<Appointm
                 .build();
     }
 
+    // Loads more events and updates WeekView
     @Override
     public void onLoadMore(@NonNull Calendar startDate, @NonNull Calendar endDate) {
-        // Load more events and update WeekView here
+        int startDateInt = DateUtils.calendarToInt(startDate);
+        int endDateInt = DateUtils.calendarToInt(endDate);
+
+        submitList(AppointmentsWeeklyViewFragment.getAppointmentsBetweenDated(startDateInt, endDateInt));
     }
 }

@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 
 /**
@@ -110,5 +115,57 @@ public class DateUtils {
     public static int getTodayDateAsInt() {
         int[] date = getTodayDateAsInts();
         return date[0] * 10000 + date[1] * 100 + date[2];
+    }
+
+    /**
+     * This method calculates the first day (Sunday) and the last day (Saturday) of the week,
+     * respectively 3 weeks prior and 3 weeks after a given date.
+     *
+     * <p>
+     * The input is an integer in the yyyymmdd format. The method returns an array of two integers,
+     * where the first integer is the first day of the week from 3 weeks prior to the given date,
+     * and the second integer is the last day of the week from 3 weeks after the given date.
+     * Both the returned dates are also in the yyyymmdd format.
+     * </p>
+     *
+     * <p>
+     * Note: This method assumes that the first day of the week is Sunday and the last day is Saturday.
+     * Adjustments may be needed based on the locale.
+     * </p>
+     *
+     * @param date the date as an integer in the format of yyyymmdd
+     * @return an array of two integers, where the first integer is the date of the first day
+     * of the week from 3 weeks prior to the given date, and the second integer is
+     * the date of the last day of the week from 3 weeks after the given date.
+     * Both dates are in the yyyymmdd format.
+     * @throws DateTimeParseException if the input date cannot be parsed
+     */
+    public static int[] get3WeeksBeforeAndAfterDates(int date) {
+        // Convert the date into a string
+        String dateString = Integer.toString(date);
+
+        // Parse the date string into a LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate localDate = LocalDate.parse(dateString, formatter);
+
+        // Get the first day of the week, 3 weeks prior
+        LocalDate startDate = localDate.minusWeeks(3)
+                .with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY));
+
+        // Get the last day of the week, 3 weeks after
+        LocalDate endDate = localDate.plusWeeks(3)
+                .with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SATURDAY));
+
+        // Convert the dates back to integers
+        int startInt = Integer.parseInt(startDate.format(formatter));
+        int endInt = Integer.parseInt(endDate.format(formatter));
+
+        return new int[]{startInt, endInt};
+    }
+
+    public static int calendarToInt(Calendar calendar) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String dateString = sdf.format(calendar.getTime());
+        return Integer.parseInt(dateString);
     }
 }

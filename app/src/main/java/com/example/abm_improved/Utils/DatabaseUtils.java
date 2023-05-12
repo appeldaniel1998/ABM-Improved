@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DatabaseUtils {
@@ -35,7 +36,7 @@ public class DatabaseUtils {
     private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
     private static final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
-    private static ArrayList<Client> clients = new ArrayList<>();
+    private static ArrayList<Client> clients = new ArrayList<>(); //TODO: change all to hashmaps and use uid as key (string)
     private static ArrayList<AppointmentType> appointmentTypes = new ArrayList<>();
     private static ArrayList<Product> products = new ArrayList<>();
     private static ArrayList<Appointment> appointments = new ArrayList<>();
@@ -257,7 +258,13 @@ public class DatabaseUtils {
     }
 
     public static void addAppointmentToDatabase(Appointment newAppointment) {
-        database.collection("Appointments").document(newAppointment.getDate()).collection("AppointmentsPerDate").document(newAppointment.getUid()).set(newAppointment) //adding appointment data to database
+        Map<String, Object> data = new HashMap<>();
+        data.put("appointmentTypeUid", newAppointment.getAppointmentTypeUid());
+        data.put("clientUid", newAppointment.getClientUid());
+        data.put("date", newAppointment.getDate());
+        data.put("time", newAppointment.getTime());
+        data.put("uid", newAppointment.getUid());
+        database.collection("Appointments").document(newAppointment.getDate()).collection("AppointmentsPerDate").document(newAppointment.getUid()).set(data) //adding appointment data to database
                 .addOnSuccessListener(unused -> {
                     Log.i(TAG, "Appointment added successfully!");
                 })

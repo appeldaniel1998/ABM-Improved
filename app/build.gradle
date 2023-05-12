@@ -24,9 +24,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_16
-        targetCompatibility JavaVersion.VERSION_16
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -53,6 +54,18 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:2.5.3"
     implementation "androidx.navigation:navigation-ui:2.5.3"
 
+    //for week view
+        implementation 'com.github.thellmund.Android-Week-View:core:5.2.4'
+        implementation 'com.github.thellmund.Android-Week-View:emoji:5.2.4'
+
+        // Add this module to use WeekView with the Java 8 Date/Time API. This module
+        // uses core library desugaring, making it available on API 21 and above.
+        implementation 'com.github.thellmund.Android-Week-View:jsr310:5.2.4'
+
+        // The development of JodaTime and ThreeTenABP are winding down.
+        // It’s best to opt for the Java 8 Date/Time API.
+        implementation 'com.github.thellmund.Android-Week-View:jodatime:5.2.4'
+        implementation 'com.github.thellmund.Android-Week-View:threetenabp:5.2.4'
 
 
 }

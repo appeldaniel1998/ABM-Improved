@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * It is a subclass of RecyclerView.Adapter
  * It is a subclass of RecyclerView.ViewHolder
  * It is a subclass of View.OnClickListener
- * We used this tutorial to create this class: https://www.youtube.com/watch?v=Nw9JF55LDzE
+ * We used this <a href="https://www.youtube.com/watch?v=Nw9JF55LDzE">tutorial</a> to create this adapter
  */
 public class ClientsRecyclerAdapter extends RecyclerView.Adapter<ClientsRecyclerAdapter.ClientViewHolder> {
 

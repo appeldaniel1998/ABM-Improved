@@ -62,7 +62,7 @@ public class AppointmentsListViewFragment extends BaseFragment {
             int year = todayDate[0];
             int month = todayDate[1];
             int day = todayDate[2];
-            navController.navigate(AppointmentsMonthlyViewFragmentDirections.actionAppointmentsMonthlyViewFragmentToAddNewAppointmentFragment(year, month, day)); // navigate to add new appointment fragment
+            navController.navigate(AppointmentsListViewFragmentDirections.actionAppointmentsListViewFragmentToAddNewAppointmentFragment(year, month, day)); // navigate to add new appointment fragment
         });
         return view;
     }

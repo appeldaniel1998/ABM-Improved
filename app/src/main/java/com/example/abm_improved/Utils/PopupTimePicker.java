@@ -44,8 +44,8 @@ public class PopupTimePicker {
         appointmentTimeTextView.setText(getTimeString((hour * 100) + minute));
     }
 
-    public static int StringToInt(String timeString) {
+    public static String reformatToBasicString(String timeString) {
         String[] timeArray = timeString.split(":");
-        return Integer.parseInt(timeArray[0]) * 100 + Integer.parseInt(timeArray[1]);
+        return timeArray[0] + timeArray[1];
     }
 }

@@ -13,13 +13,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.abm_improved.Appointments.Templates.EnterAppointmentDetails;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Appointment;
-import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.PopupDatePicker;
 import com.example.abm_improved.Utils.PopupTimePicker;
-
-import java.util.UUID;
 
 public class EditAppointmentFragment extends BaseFragment {
 
@@ -51,7 +48,7 @@ public class EditAppointmentFragment extends BaseFragment {
             String appointmentType = DatabaseUtils.getAppointmentTypes().get(enterAppointmentDetails.getAppointmentTypeIndexChosen()).getUid();
             String appointmentClient = DatabaseUtils.getClients().get(enterAppointmentDetails.getClientIndexChosen()).getUid();
             String appointmentDate = PopupDatePicker.stringToInt(enterAppointmentDetails.getAppointmentDateTextView().getText().toString()) + "";
-            String appointmentTime = PopupTimePicker.StringToInt(enterAppointmentDetails.getAppointmentTimeTextView().getText().toString()) + "";
+            String appointmentTime = PopupTimePicker.reformatToBasicString(enterAppointmentDetails.getAppointmentTimeTextView().getText().toString());
             String uid = currAppointment.getUid();
 
             Appointment appointment = new Appointment(uid, appointmentClient, appointmentType, appointmentDate, appointmentTime);

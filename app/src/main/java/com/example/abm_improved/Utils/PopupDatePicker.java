@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -16,7 +17,7 @@ public class PopupDatePicker {
     /**
      * Function to return the string representing today's date
      *
-     * @return string representing a date
+     * @return string representing a date (e.g. 1 January 2021)
      */
     public static String getTodayDate() {
         Calendar cal = Calendar.getInstance();
@@ -125,5 +126,68 @@ public class PopupDatePicker {
 
         //default should never happen
         return "00";
+    }
+
+    /**
+     * @param date date as integer (YYYYMMDD)
+     * @return day of the week as an integer (Sunday = 1, Monday = 2, etc.)
+     */
+    public static int getDayOfWeek(int date) {
+        int day = date % 100;
+        int month = (date / 100) % 100;
+        int year = date / (100 * 100);
+
+        // Create a calendar object and set the date
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day); // Replace year, month, day with the desired values
+
+        // Get the day of the week as an integer (Sunday = 1, Monday = 2, etc.)
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public static int getTodayDateAsInt() {
+        int[] date = getTodayDateAsInts();
+        return date[0] * 10000 + date[1] * 100 + date[2];
+    }
+
+    /**
+     * Returns a list of integers representing the dates of all days in the week of the given date.
+     * The input date and the returned dates are in the yyyymmdd format.
+     * <p>
+     * The method calculates the start of the week (Sunday by default) for the given date and then
+     * iterates through the week, adding each date to the list. The list starts with the first day
+     * of the week and ends with the last day of the week (Saturday by default).
+     *
+     * @param inputDate An integer representing the date in yyyymmdd format (e.g., 20230510 for May 10, 2023)
+     * @return A list of integers containing the dates for all days of the week of the given date,
+     * in yyyymmdd format (e.g., [20230507, 20230508, 20230509, 20230510, 20230511, 20230512, 20230513])
+     */
+    public int[] getWeekDates(int inputDate) {
+        int[] weekDates = new int[7];
+
+        Calendar calendar = Calendar.getInstance();
+
+        int day = inputDate % 100;
+        int month = (inputDate / 100) % 100;
+        int year = inputDate / (100 * 100);
+
+        calendar.set(year, month - 1, day); // Calendar.MONTH is zero-based
+
+        // Find the start of the week (Sunday) by setting the day to the first day of the week
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+
+        // Iterate through the week and add each date to the list
+        for (int i = 0; i < 7; i++) {
+            int currentYear = calendar.get(Calendar.YEAR);
+            int currentMonth = calendar.get(Calendar.MONTH) + 1; // Calendar.MONTH is zero-based
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+            int currDayInWeekDate = currentYear * 10000 + currentMonth * 100 + currentDay;
+            weekDates[i] = currDayInWeekDate;
+
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return weekDates;
     }
 }

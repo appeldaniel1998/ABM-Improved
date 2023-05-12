@@ -12,7 +12,7 @@ import com.example.abm_improved.Appointments.AppointmentsBaseFragment;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.R;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 
 public class RegisterFragment extends BaseFragment {
 
@@ -40,7 +40,7 @@ public class RegisterFragment extends BaseFragment {
             } else if (!passwordStr.equals(confirmPasswordStr)) {
                 Toast.makeText(getContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
             } else {
-                registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, PopupDatePicker.stringToInt(birthdayStr));
+                registerNewUser(requireActivity(), firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, passwordStr, DateUtils.stringToInt(birthdayStr));
 
                 // Move to appointments main fragment
                 requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new AppointmentsBaseFragment()).addToBackStack(null).commit();

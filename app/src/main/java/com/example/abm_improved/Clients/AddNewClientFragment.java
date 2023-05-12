@@ -15,7 +15,7 @@ import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.UUID;
@@ -45,7 +45,7 @@ public class AddNewClientFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
             } else { // Create new client, add to database and upload profile pic
                 String currClientUid = UUID.randomUUID().toString(); // Creating UID for the new user
-                Client userToAdd = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, PopupDatePicker.stringToInt(birthdayStr), currClientUid, false); //creating a new client
+                Client userToAdd = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DateUtils.stringToInt(birthdayStr), currClientUid, false); //creating a new client
                 DatabaseUtils.uploadRelevantClientInfo(userToAdd,
                         requireActivity(),
                         FirebaseStorage.getInstance().getReference().child("Clients").child(currClientUid).child("profile.jpg"));

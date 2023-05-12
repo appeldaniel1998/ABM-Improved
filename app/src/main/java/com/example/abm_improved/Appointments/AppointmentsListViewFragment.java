@@ -2,7 +2,6 @@ package com.example.abm_improved.Appointments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -17,14 +16,10 @@ import android.widget.ProgressBar;
 
 import com.example.abm_improved.Appointments.Adapters.AppointmentsRecyclerAdapter;
 import com.example.abm_improved.BaseFragment;
-import com.example.abm_improved.Clients.Adapters.ClientsRecyclerAdapter;
-import com.example.abm_improved.Clients.AddNewClientFragment;
-import com.example.abm_improved.Clients.ClientsMainFragment;
-import com.example.abm_improved.Clients.EditClientFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 
 public class AppointmentsListViewFragment extends BaseFragment {
 
@@ -58,7 +53,7 @@ public class AppointmentsListViewFragment extends BaseFragment {
         DatabaseUtils.getAllAppointmentsFromDatabase(new OnGetAllAppointments());
 
         addAppointmentButton.setOnClickListener(v -> {
-            int[] todayDate = PopupDatePicker.getTodayDateAsInts(); // get today's date as ints (3 ints in the array)
+            int[] todayDate = DateUtils.getTodayDateAsInts(); // get today's date as ints (3 ints in the array)
             int year = todayDate[0];
             int month = todayDate[1];
             int day = todayDate[2];

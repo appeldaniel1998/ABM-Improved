@@ -14,8 +14,7 @@ import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.Interfaces;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
 import java.util.UUID;
@@ -43,7 +42,7 @@ public class AddNewAppointmentFragment extends BaseFragment {
         enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.ADDING_APPOINTMENT, null);
 
         if (year != -1 && month != -1 && day != -1) {
-            enterAppointmentDetails.getAppointmentDateTextView().setText(PopupDatePicker.makeDateString(day, month, year));
+            enterAppointmentDetails.getAppointmentDateTextView().setText(DateUtils.makeDateString(day, month, year));
         }
 
         enterAppointmentDetails.getAddAppointmentButton().setOnClickListener(v -> {
@@ -52,7 +51,7 @@ public class AddNewAppointmentFragment extends BaseFragment {
             } else {
                 String appointmentType = DatabaseUtils.getAppointmentTypes().get(enterAppointmentDetails.getAppointmentTypeIndexChosen()).getUid();
                 String appointmentClient = DatabaseUtils.getClients().get(enterAppointmentDetails.getClientIndexChosen()).getUid();
-                String appointmentDate = PopupDatePicker.stringToInt(enterAppointmentDetails.getAppointmentDateTextView().getText().toString()) + "";
+                String appointmentDate = DateUtils.stringToInt(enterAppointmentDetails.getAppointmentDateTextView().getText().toString()) + "";
                 String appointmentTime = PopupTimePicker.reformatToBasicString(enterAppointmentDetails.getAppointmentTimeTextView().getText().toString());
                 String uid = UUID.randomUUID().toString();
 

@@ -13,7 +13,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 
 public class AppointmentsMonthlyViewFragment extends BaseFragment {
 
@@ -35,7 +35,7 @@ public class AppointmentsMonthlyViewFragment extends BaseFragment {
         calendar = view.findViewById(R.id.calendar);
         addAppointmentButton = view.findViewById(R.id.add_appointment_button);
 
-        int[] todayDate = PopupDatePicker.getTodayDateAsInts(); // get today's date as ints (3 ints in the array)
+        int[] todayDate = DateUtils.getTodayDateAsInts(); // get today's date as ints (3 ints in the array)
         year = todayDate[0];
         month = todayDate[1];
         day = todayDate[2];

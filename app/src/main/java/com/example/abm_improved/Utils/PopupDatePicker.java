@@ -4,43 +4,14 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * Class function code inspired by the tutorial and the accompanying github:
- * https://www.youtube.com/watch?v=qCoidM98zNk
- * https://github.com/codeWithCal/DatePickerTutorial/blob/master/app/src/main/java/codewithcal/au/datepickertutorial/MainActivity.java
- */
 public class PopupDatePicker {
-
-    /**
-     * Function to return the string representing today's date
-     *
-     * @return string representing a date (e.g. 1 January 2021)
-     */
-    public static String getTodayDate() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1; // Jan = 0, so increment by 1 for the sake of understandability
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        return makeDateString(day, month, year);
-    }
-
-    public static int[] getTodayDateAsInts() {
-        int[] date = new int[3];
-        Calendar cal = Calendar.getInstance();
-        date[0] = cal.get(Calendar.YEAR);
-        date[1] = cal.get(Calendar.MONTH) + 1; // Jan = 0, so increment by 1 for the sake of understandability
-        date[2] = cal.get(Calendar.DAY_OF_MONTH);
-        return date;
-    }
-
     public static DatePickerDialog initDatePicker(TextView dateTextView, Activity activity) {
         // when ok is clicked inside the date picker
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
             month = month + 1;
-            String date = makeDateString(day, month, year);
+            String date = DateUtils.makeDateString(day, month, year);
             dateTextView.setText(date);
         };
 
@@ -53,141 +24,5 @@ public class PopupDatePicker {
 
         return new DatePickerDialog(activity, style, dateSetListener, year, month, day);
 //        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());  // Can set max/min date with this line of code
-    }
-
-    /**
-     * Construct a string to present to the user after choosing a date. Given the day, month and year, create and return an appropriate string
-     *
-     * @param day   day of month
-     * @param month month of year
-     * @param year  year
-     * @return constructed string
-     */
-    public static String makeDateString(int day, int month, int year) {
-        return day + " " + getMonthFormat(month) + " " + year;
-    }
-
-    /**
-     * Given a month as a number, returns the name of the month as a relevant string
-     */
-    public static String getMonthFormat(int month) {
-        if (month == 1) return "January";
-        if (month == 2) return "February";
-        if (month == 3) return "March";
-        if (month == 4) return "April";
-        if (month == 5) return "May";
-        if (month == 6) return "June";
-        if (month == 7) return "July";
-        if (month == 8) return "August";
-        if (month == 9) return "September";
-        if (month == 10) return "October";
-        if (month == 11) return "November";
-        if (month == 12) return "December";
-
-        //default should never happen
-        return "Error";
-    }
-
-    //converting to and from database format (2 following functions)
-    public static int stringToInt(String date) {
-        String[] arr = date.split(" ");
-        String day = formatDay(Integer.parseInt(arr[0]));
-        String month = getMonthFormat(arr[1]);
-        int year = Integer.parseInt(arr[2]);
-        String tempDate = year + "" + month + "" + day;
-        return Integer.parseInt(tempDate);
-    }
-
-    public static String formatDay(int day) {
-        if (day >= 10) return day + "";
-        else return "0" + day;
-    }
-
-    public static String intToString(int date) {
-        int day = date % 100;
-        int month = (date / 100) % 100;
-        int year = date / (100 * 100);
-        return makeDateString(day, month, year);
-    }
-
-    public static String getMonthFormat(String month) {
-        if (month.equals("January")) return "01";
-        if (month.equals("February")) return "02";
-        if (month.equals("March")) return "03";
-        if (month.equals("April")) return "04";
-        if (month.equals("May")) return "05";
-        if (month.equals("June")) return "06";
-        if (month.equals("July")) return "07";
-        if (month.equals("August")) return "08";
-        if (month.equals("September")) return "09";
-        if (month.equals("October")) return "10";
-        if (month.equals("November")) return "11";
-        if (month.equals("December")) return "12";
-
-        //default should never happen
-        return "00";
-    }
-
-    /**
-     * @param date date as integer (YYYYMMDD)
-     * @return day of the week as an integer (Sunday = 1, Monday = 2, etc.)
-     */
-    public static int getDayOfWeek(int date) {
-        int day = date % 100;
-        int month = (date / 100) % 100;
-        int year = date / (100 * 100);
-
-        // Create a calendar object and set the date
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day); // Replace year, month, day with the desired values
-
-        // Get the day of the week as an integer (Sunday = 1, Monday = 2, etc.)
-        return calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
-    public static int getTodayDateAsInt() {
-        int[] date = getTodayDateAsInts();
-        return date[0] * 10000 + date[1] * 100 + date[2];
-    }
-
-    /**
-     * Returns a list of integers representing the dates of all days in the week of the given date.
-     * The input date and the returned dates are in the yyyymmdd format.
-     * <p>
-     * The method calculates the start of the week (Sunday by default) for the given date and then
-     * iterates through the week, adding each date to the list. The list starts with the first day
-     * of the week and ends with the last day of the week (Saturday by default).
-     *
-     * @param inputDate An integer representing the date in yyyymmdd format (e.g., 20230510 for May 10, 2023)
-     * @return A list of integers containing the dates for all days of the week of the given date,
-     * in yyyymmdd format (e.g., [20230507, 20230508, 20230509, 20230510, 20230511, 20230512, 20230513])
-     */
-    public int[] getWeekDates(int inputDate) {
-        int[] weekDates = new int[7];
-
-        Calendar calendar = Calendar.getInstance();
-
-        int day = inputDate % 100;
-        int month = (inputDate / 100) % 100;
-        int year = inputDate / (100 * 100);
-
-        calendar.set(year, month - 1, day); // Calendar.MONTH is zero-based
-
-        // Find the start of the week (Sunday) by setting the day to the first day of the week
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-
-        // Iterate through the week and add each date to the list
-        for (int i = 0; i < 7; i++) {
-            int currentYear = calendar.get(Calendar.YEAR);
-            int currentMonth = calendar.get(Calendar.MONTH) + 1; // Calendar.MONTH is zero-based
-            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-            int currDayInWeekDate = currentYear * 10000 + currentMonth * 100 + currentDay;
-            weekDates[i] = currDayInWeekDate;
-
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        return weekDates;
     }
 }

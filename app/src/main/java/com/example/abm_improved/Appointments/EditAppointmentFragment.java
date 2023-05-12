@@ -15,7 +15,7 @@ import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
 public class EditAppointmentFragment extends BaseFragment {
@@ -47,7 +47,7 @@ public class EditAppointmentFragment extends BaseFragment {
         enterAppointmentDetails.getAddAppointmentButton().setOnClickListener(v -> {
             String appointmentType = DatabaseUtils.getAppointmentTypes().get(enterAppointmentDetails.getAppointmentTypeIndexChosen()).getUid();
             String appointmentClient = DatabaseUtils.getClients().get(enterAppointmentDetails.getClientIndexChosen()).getUid();
-            String appointmentDate = PopupDatePicker.stringToInt(enterAppointmentDetails.getAppointmentDateTextView().getText().toString()) + "";
+            String appointmentDate = DateUtils.stringToInt(enterAppointmentDetails.getAppointmentDateTextView().getText().toString()) + "";
             String appointmentTime = PopupTimePicker.reformatToBasicString(enterAppointmentDetails.getAppointmentTimeTextView().getText().toString());
             String uid = currAppointment.getUid();
 

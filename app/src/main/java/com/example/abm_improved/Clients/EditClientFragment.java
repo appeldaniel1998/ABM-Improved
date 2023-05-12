@@ -12,16 +12,14 @@ import android.widget.Toast;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.abm_improved.AppointmentTypes.EditAppointmentTypeFragmentArgs;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.Clients.Templates.EnterClientDetails;
 import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.example.abm_improved.Clients.EditClientFragmentArgs;
 
 
 public class EditClientFragment extends BaseFragment {
@@ -63,7 +61,7 @@ public class EditClientFragment extends BaseFragment {
             if (firstNameStr.isEmpty() || lastNameStr.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
             } else {
-                Client updatedClient = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, PopupDatePicker.stringToInt(birthdayStr), currClient.getUid(), currClient.getManager()); // creating a new client
+                Client updatedClient = new Client(firstNameStr, lastNameStr, emailStr, phoneNumberStr, addressStr, DateUtils.stringToInt(birthdayStr), currClient.getUid(), currClient.getManager()); // creating a new client
                 DatabaseUtils.uploadRelevantClientInfo(updatedClient,
                         requireActivity(),
                         profilePicReference);

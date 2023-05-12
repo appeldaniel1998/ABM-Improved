@@ -2,11 +2,9 @@ package com.example.abm_improved.Appointments.Templates;
 
 import android.app.DatePickerDialog;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +16,7 @@ import com.example.abm_improved.DataClasses.Client;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
+import com.example.abm_improved.Utils.DateUtils;
 import com.example.abm_improved.Utils.PopupDatePicker;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
@@ -62,7 +61,7 @@ public class EnterAppointmentDetails {
         this.currAppointment = currAppointment;
 
         this.datePickerDialog = PopupDatePicker.initDatePicker(appointmentDateTextView, activity);
-        this.appointmentDateTextView.setText(PopupDatePicker.getTodayDate()); // Set initial date to today's date
+        this.appointmentDateTextView.setText(DateUtils.getTodayDate()); // Set initial date to today's date
         dateLinearLayout.setOnClickListener(v -> datePickerDialog.show()); //onclick listener for birthdayLinearLayout to choose a date
 
         timeLinearLayout.setOnClickListener(v -> {
@@ -79,7 +78,7 @@ public class EnterAppointmentDetails {
     }
 
     public void setFields() {
-        this.appointmentDateTextView.setText(PopupDatePicker.intToString(Integer.parseInt(currAppointment.getDate())));
+        this.appointmentDateTextView.setText(DateUtils.intToString(Integer.parseInt(currAppointment.getDate())));
         this.appointmentTimeTextView.setText(PopupTimePicker.getTimeString(Integer.parseInt(currAppointment.getTime())));
     }
 

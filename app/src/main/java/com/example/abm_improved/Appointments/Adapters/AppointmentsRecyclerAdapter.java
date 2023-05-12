@@ -12,7 +12,7 @@ import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class AppointmentsRecyclerAdapter extends RecyclerView.Adapter<Appointmen
             DatabaseUtils.getAllAppointmentTypesFromDatabase(new OnGetAppointmentTypes(holder, currAppointment));
         else
             holder.appointmentType.setText(DatabaseUtils.findAppointmentType(currAppointment.getAppointmentTypeUid()).getTypeName());
-        holder.appointmentDate.setText(PopupDatePicker.intToString(Integer.parseInt(currAppointment.getDate())));
+        holder.appointmentDate.setText(DateUtils.intToString(Integer.parseInt(currAppointment.getDate())));
         holder.appointmentTime.setText(PopupTimePicker.getTimeString(Integer.parseInt(currAppointment.getTime())));
     }
 

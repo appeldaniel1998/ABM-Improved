@@ -9,8 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-
 import com.alamkanak.weekview.WeekView;
 import com.example.abm_improved.Appointments.Adapters.CustomWeekViewPagingAdapter;
 import com.example.abm_improved.BaseFragment;
@@ -18,7 +16,7 @@ import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
-import com.example.abm_improved.Utils.PopupDatePicker;
+import com.example.abm_improved.Utils.DateUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +24,6 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class AppointmentsWeeklyViewFragment extends BaseFragment {
 
@@ -63,7 +60,7 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
         DatabaseUtils.getAllClientsFromDatabase(new Interfaces.DoNothing());
         DatabaseUtils.getAllAppointmentsFromDatabase(new AppointmentsWeeklyViewFragment.OnGetAllAppointments());
 
-        currentDateRange = getDates(PopupDatePicker.getTodayDateAsInt());
+        currentDateRange = get3WeeksBeforeAndAfterDates(DateUtils.getTodayDateAsInt());
 
         return view;
     }
@@ -100,24 +97,6 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
         });
     }
 
-    private class OnGetAllAppointments implements Interfaces.OnFinishQueryInterface {
-        @Override
-        public void onFinishQuery() {
-            //todo init recycler views
-            inRangeAppointments = new ArrayList<>();
-            ArrayList<Appointment> appointments = DatabaseUtils.getAppointments();
-            for (Appointment appointment : appointments) {
-                int appointmentDate = Integer.parseInt(appointment.getDate());
-                if (appointmentDate >= currentDateRange[0] && appointmentDate <= currentDateRange[1]) {
-                    appointment.getStartEndTime();
-                    inRangeAppointments.add(appointment);
-                }
-            }
-            weekViewPagingAdapter.submitList(inRangeAppointments);
-
-        }
-    }
-
     /**
      * This method calculates the first day (Sunday) and the last day (Saturday) of the week,
      * respectively 3 weeks prior and 3 weeks after a given date.
@@ -141,7 +120,7 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
      * Both dates are in the yyyymmdd format.
      * @throws DateTimeParseException if the input date cannot be parsed
      */
-    public int[] getDates(int date) {
+    public int[] get3WeeksBeforeAndAfterDates(int date) {
         // Convert the date into a string
         String dateString = Integer.toString(date);
 
@@ -162,5 +141,23 @@ public class AppointmentsWeeklyViewFragment extends BaseFragment {
         int endInt = Integer.parseInt(endDate.format(formatter));
 
         return new int[]{startInt, endInt};
+    }
+
+    private class OnGetAllAppointments implements Interfaces.OnFinishQueryInterface {
+        @Override
+        public void onFinishQuery() {
+            //todo init recycler views
+            inRangeAppointments = new ArrayList<>();
+            ArrayList<Appointment> appointments = DatabaseUtils.getAppointments();
+            for (Appointment appointment : appointments) {
+                int appointmentDate = Integer.parseInt(appointment.getDate());
+                if (appointmentDate >= currentDateRange[0] && appointmentDate <= currentDateRange[1]) {
+                    appointment.getStartEndTime();
+                    inRangeAppointments.add(appointment);
+                }
+            }
+            weekViewPagingAdapter.submitList(inRangeAppointments);
+
+        }
     }
 }

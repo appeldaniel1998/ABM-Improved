@@ -15,7 +15,6 @@ public class CustomWeekViewPagingAdapter extends WeekView.PagingAdapter<Appointm
     public CustomWeekViewPagingAdapter() {
     }
 
-
     @NonNull
     @Override
     public WeekViewEntity onCreateEntity(@NonNull Appointment item) {

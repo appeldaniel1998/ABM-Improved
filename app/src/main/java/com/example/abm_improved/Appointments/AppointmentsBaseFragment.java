@@ -24,13 +24,6 @@ public class AppointmentsBaseFragment extends BaseFragment {
     private static final String TAG = "AppointmentsBaseFragment";
     private NavController nestedNavController;
 
-//    BaseActivity baseActivity = (BaseActivity) requireActivity();
-
-    protected static final int APPOINTMENTS_LIST_VIEW = R.id.appointmentsListViewFragment;
-    protected static final int APPOINTMENTS_WEEKLY_VIEW = R.id.appointmentsWeeklyViewFragment;
-    protected static final int APPOINTMENTS_MONTHLY_VIEW = R.id.appointmentsMonthlyViewFragment;
-//    protected static int lastFragmentId = APPOINTMENTS_MONTHLY_VIEW; //default fragment to show (updated in nav-graph)
-
     public NavController getNavController() {
         return nestedNavController;
     }
@@ -58,8 +51,9 @@ public class AppointmentsBaseFragment extends BaseFragment {
         // Add the OnDestinationChangedListener in order to handle the back button on non-top-level destinations of the bottom navigation bar
         nestedNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             BaseActivity baseActivity = (BaseActivity) requireActivity();
-            boolean isTopLevelDestination = destination.getId() == APPOINTMENTS_LIST_VIEW || destination.getId() == APPOINTMENTS_WEEKLY_VIEW
-                    || destination.getId() == APPOINTMENTS_MONTHLY_VIEW;
+            boolean isTopLevelDestination = destination.getId() == R.id.appointmentsListViewFragment || destination.getId() == R.id.appointmentsWeeklyViewFragment
+                    || destination.getId() == R.id.appointmentsMonthlyViewFragment || destination.getId() == R.id.appointmentsThreeDaysViewFragment
+                    || destination.getId() == R.id.appointmentsDailyViewFragment;
             if (isTopLevelDestination) {
                 baseActivity.appBarConfiguration = new AppBarConfiguration.Builder(
                         R.id.appointmentsBaseFragment,
@@ -69,9 +63,11 @@ public class AppointmentsBaseFragment extends BaseFragment {
                         R.id.historyFragment,
                         R.id.cartMainFragment,
                         R.id.loginFragment,
-                        APPOINTMENTS_LIST_VIEW,
-                        APPOINTMENTS_WEEKLY_VIEW,
-                        APPOINTMENTS_MONTHLY_VIEW)
+                        R.id.appointmentsListViewFragment,
+                        R.id.appointmentsWeeklyViewFragment,
+                        R.id.appointmentsMonthlyViewFragment,
+                        R.id.appointmentsThreeDaysViewFragment,
+                        R.id.appointmentsDailyViewFragment)
                         .setOpenableLayout(baseActivity.drawerLayout)
                         .build();
                 baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);

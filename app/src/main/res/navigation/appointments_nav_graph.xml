@@ -72,4 +72,14 @@
             android:name="appointmentIndex"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/appointmentsThreeDaysViewFragment"
+        android:name="com.example.abm_improved.Appointments.AppointmentsThreeDaysViewFragment"
+        android:label="Appointments"
+        tools:layout="@layout/fragment_appointments_three_days_view" />
+    <fragment
+        android:id="@+id/appointmentsDailyViewFragment"
+        android:name="com.example.abm_improved.Appointments.AppointmentsDailyViewFragment"
+        android:label="Appointments"
+        tools:layout="@layout/fragment_appointments_daily_view" />
 </navigation>

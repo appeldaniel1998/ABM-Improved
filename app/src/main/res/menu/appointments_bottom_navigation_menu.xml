@@ -8,6 +8,14 @@
         android:id="@+id/appointmentsWeeklyViewFragment"
         android:icon="@drawable/weekly"/>
 
+    <item android:title="3 Days"
+        android:id="@+id/appointmentsThreeDaysViewFragment"
+        android:icon="@drawable/three_days"/>
+
+    <item android:title="Daily"
+        android:id="@+id/appointmentsDailyViewFragment"
+        android:icon="@drawable/day"/>
+
     <item android:title="List"
         android:id="@+id/appointmentsListViewFragment"
         android:icon="@drawable/list"/>

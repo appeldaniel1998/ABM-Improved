@@ -33,8 +33,6 @@ public class AddNewAppointmentFragment extends BasePopupDialog {
 
     private EnterAppointmentDetails enterAppointmentDetails;
 
-    private NavController navController;
-
     public static AddNewAppointmentFragment newInstance(int year, int month, int day) {
         AddNewAppointmentFragment fragment = new AddNewAppointmentFragment();
 
@@ -52,8 +50,6 @@ public class AddNewAppointmentFragment extends BasePopupDialog {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.templates_enter_appointment_details, container, false);
 
-        navController = NavHostFragment.findNavController(AddNewAppointmentFragment.this);
-
         assert getArguments() != null;
         Bundle bundle = getArguments();
         int year = bundle.getInt(ARG_YEAR);
@@ -62,8 +58,7 @@ public class AddNewAppointmentFragment extends BasePopupDialog {
 
         enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.ADDING_APPOINTMENT, null);
 
-        ImageButton closeButton = view.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(v -> dismiss()); // When the close button is clicked, dismiss (close) the dialog
+        enterAppointmentDetails.getDialogCloseButton().setOnClickListener(v -> dismiss()); // When the close button is clicked, dismiss (close) the dialog
 
         if (year != -1 && month != -1 && day != -1) {
             enterAppointmentDetails.getAppointmentDateTextView().setText(DateUtils.makeDateString(day, month, year));

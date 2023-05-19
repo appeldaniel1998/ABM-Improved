@@ -21,7 +21,6 @@ import com.example.abm_improved.Utils.PopupTimePicker;
 public class EditAppointmentFragment extends BasePopupDialog {
 
     private static final String ARG_APPOINTMENT_INDEX = "appointmentIndex";
-    NavController navController;
 
     public static EditAppointmentFragment newInstance(int position) {
         EditAppointmentFragment fragment = new EditAppointmentFragment();
@@ -39,7 +38,6 @@ public class EditAppointmentFragment extends BasePopupDialog {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.templates_enter_appointment_details, container, false);
 
-        navController = NavHostFragment.findNavController(EditAppointmentFragment.this);
 
         // Getting index of current client from previous fragment
         assert getArguments() != null;
@@ -47,6 +45,7 @@ public class EditAppointmentFragment extends BasePopupDialog {
         Appointment currAppointment = DatabaseUtils.getAppointments().get(appointmentIndex);
 
         EnterAppointmentDetails enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.EDITING_APPOINTMENT, currAppointment);
+        enterAppointmentDetails.getDialogCloseButton().setOnClickListener(v -> dismiss()); // When the close button is clicked, dismiss (close) the dialog
 
         Button deleteAppointmentButton = enterAppointmentDetails.getDeleteAppointmentButton();
         deleteAppointmentButton.setVisibility(View.VISIBLE);

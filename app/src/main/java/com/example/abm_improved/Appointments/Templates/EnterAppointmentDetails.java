@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,9 +44,15 @@ public class EnterAppointmentDetails {
     public static final int ADDING_APPOINTMENT = 0;
     public static final int EDITING_APPOINTMENT = 1;
 
-    private int addOrEdit;
+    private final int addOrEdit;
 
-    private Appointment currAppointment;
+    private final Appointment currAppointment;
+
+    private final ImageButton dialogCloseButton;
+
+    public ImageButton getDialogCloseButton() {
+        return dialogCloseButton;
+    }
 
     public EnterAppointmentDetails(View view, FragmentActivity activity, int addOrEdit, Appointment currAppointment) {
         this.appointmentTypeEditText = view.findViewById(R.id.appointmentTypeEditText);
@@ -59,6 +66,7 @@ public class EnterAppointmentDetails {
         this.currentActivity = activity;
         this.addOrEdit = addOrEdit;
         this.currAppointment = currAppointment;
+        dialogCloseButton = view.findViewById(R.id.closeButton);
 
         this.datePickerDialog = PopupDatePicker.initDatePicker(appointmentDateTextView, activity);
         this.appointmentDateTextView.setText(DateUtils.getTodayDate()); // Set initial date to today's date

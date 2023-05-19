@@ -57,8 +57,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     public static Uri profilePicUri;
     // ------------------------
 
+    // For Nav Controller
     public NavController navController;
     public AppBarConfiguration appBarConfiguration;
+    // ------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

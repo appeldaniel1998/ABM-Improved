@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,15 +19,12 @@ import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 public class AppointmentsBaseFragment extends BaseFragment {
 
     private static final String TAG = "AppointmentsBaseFragment";
     private NavController nestedNavController;
-
-    public NavController getNavController() {
-        return nestedNavController;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,11 +61,11 @@ public class AppointmentsBaseFragment extends BaseFragment {
                         R.id.historyFragment,
                         R.id.cartMainFragment,
                         R.id.loginFragment,
-                        R.id.appointmentsListViewFragment,
-                        R.id.appointmentsWeeklyViewFragment,
                         R.id.appointmentsMonthlyViewFragment,
+                        R.id.appointmentsWeeklyViewFragment,
                         R.id.appointmentsThreeDaysViewFragment,
-                        R.id.appointmentsDailyViewFragment)
+                        R.id.appointmentsDailyViewFragment,
+                        R.id.appointmentsListViewFragment)
                         .setOpenableLayout(baseActivity.drawerLayout)
                         .build();
                 baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -78,5 +76,4 @@ public class AppointmentsBaseFragment extends BaseFragment {
             NavigationUI.setupActionBarWithNavController(baseActivity, nestedNavController, baseActivity.appBarConfiguration);
         });
     }
-
 }

@@ -18,9 +18,21 @@ import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.DateUtils;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
-public class EditAppointmentFragment extends BaseFragment {
+public class EditAppointmentFragment extends BasePopupDialog {
 
+    private static final String ARG_APPOINTMENT_INDEX = "appointmentIndex";
     NavController navController;
+
+    public static EditAppointmentFragment newInstance(int position) {
+        EditAppointmentFragment fragment = new EditAppointmentFragment();
+
+        // Pass the data to the DialogFragment
+        Bundle args = new Bundle();
+        args.putInt(ARG_APPOINTMENT_INDEX, position);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,8 +43,7 @@ public class EditAppointmentFragment extends BaseFragment {
 
         // Getting index of current client from previous fragment
         assert getArguments() != null;
-        EditAppointmentFragmentArgs args = EditAppointmentFragmentArgs.fromBundle(getArguments());
-        int appointmentIndex = args.getAppointmentIndex();
+        int appointmentIndex = getArguments().getInt(ARG_APPOINTMENT_INDEX);
         Appointment currAppointment = DatabaseUtils.getAppointments().get(appointmentIndex);
 
         EnterAppointmentDetails enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.EDITING_APPOINTMENT, currAppointment);
@@ -41,7 +52,7 @@ public class EditAppointmentFragment extends BaseFragment {
         deleteAppointmentButton.setVisibility(View.VISIBLE);
         deleteAppointmentButton.setOnClickListener(v -> {
             DatabaseUtils.deleteAppointmentFromDatabase(currAppointment);
-            navController.popBackStack(); // go back to previous fragment
+            dismiss(); // dismiss the dialog
         });
 
         enterAppointmentDetails.getAddAppointmentButton().setOnClickListener(v -> {
@@ -55,7 +66,7 @@ public class EditAppointmentFragment extends BaseFragment {
             DatabaseUtils.addAppointmentToDatabase(appointment);
             Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show();
 
-            navController.popBackStack(); // go back to previous fragment
+            dismiss(); // dismiss the dialog
         });
 
         return view;

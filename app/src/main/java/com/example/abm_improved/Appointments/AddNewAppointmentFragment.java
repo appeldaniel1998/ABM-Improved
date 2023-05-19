@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -17,15 +20,33 @@ import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.DateUtils;
 import com.example.abm_improved.Utils.PopupTimePicker;
 
+import java.util.Objects;
 import java.util.UUID;
 
-public class AddNewAppointmentFragment extends BaseFragment {
+public class AddNewAppointmentFragment extends BasePopupDialog {
+
+    private static final String ARG_YEAR = "year";
+    private static final String ARG_MONTH = "month";
+    private static final String ARG_DAY = "day";
 
     private static final String TAG = "AddNewAppointmentFragment";
 
     private EnterAppointmentDetails enterAppointmentDetails;
 
     private NavController navController;
+
+    public static AddNewAppointmentFragment newInstance(int year, int month, int day) {
+        AddNewAppointmentFragment fragment = new AddNewAppointmentFragment();
+
+        // Pass the data to the DialogFragment
+        Bundle args = new Bundle();
+        args.putInt(ARG_YEAR, year);
+        args.putInt(ARG_MONTH, month);
+        args.putInt(ARG_DAY, day);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,12 +55,15 @@ public class AddNewAppointmentFragment extends BaseFragment {
         navController = NavHostFragment.findNavController(AddNewAppointmentFragment.this);
 
         assert getArguments() != null;
-        AddNewAppointmentFragmentArgs args = AddNewAppointmentFragmentArgs.fromBundle(getArguments());
-        int year = args.getYear();
-        int month = args.getMonth();
-        int day = args.getDay();
+        Bundle bundle = getArguments();
+        int year = bundle.getInt(ARG_YEAR);
+        int month = bundle.getInt(ARG_MONTH);
+        int day = bundle.getInt(ARG_DAY);
 
         enterAppointmentDetails = new EnterAppointmentDetails(view, requireActivity(), EnterAppointmentDetails.ADDING_APPOINTMENT, null);
+
+        ImageButton closeButton = view.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(v -> dismiss()); // When the close button is clicked, dismiss (close) the dialog
 
         if (year != -1 && month != -1 && day != -1) {
             enterAppointmentDetails.getAppointmentDateTextView().setText(DateUtils.makeDateString(day, month, year));
@@ -58,7 +82,7 @@ public class AddNewAppointmentFragment extends BaseFragment {
                 Appointment appointment = new Appointment(uid, appointmentClient, appointmentType, appointmentDate, appointmentTime);
                 DatabaseUtils.addAppointmentToDatabase(appointment);
 
-                navController.popBackStack();
+                dismiss(); // Dismiss (close) the dialog
             }
         });
 

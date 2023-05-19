@@ -47,7 +47,8 @@ public class AppointmentsMonthlyViewFragment extends BaseFragment {
         });
 
         addAppointmentButton.setOnClickListener(v -> {
-            navController.navigate(AppointmentsMonthlyViewFragmentDirections.actionAppointmentsMonthlyViewFragmentToAddNewAppointmentFragment(year, month, day));
+            AddNewAppointmentFragment dialogFragment = AddNewAppointmentFragment.newInstance(year, month, day);
+            dialogFragment.show(requireActivity().getSupportFragmentManager(), "AddNewAppointmentFragment");
         });
 
         return view;

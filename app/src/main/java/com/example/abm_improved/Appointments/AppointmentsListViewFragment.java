@@ -57,7 +57,10 @@ public class AppointmentsListViewFragment extends BaseFragment {
             int year = todayDate[0];
             int month = todayDate[1];
             int day = todayDate[2];
-            navController.navigate(AppointmentsListViewFragmentDirections.actionAppointmentsListViewFragmentToAddNewAppointmentFragment(year, month, day)); // navigate to add new appointment fragment
+
+            //open the add new appointment fragment dialog
+            AddNewAppointmentFragment dialogFragment = AddNewAppointmentFragment.newInstance(year, month, day);
+            dialogFragment.show(requireActivity().getSupportFragmentManager(), "AddNewAppointmentFragment");
         });
         return view;
     }
@@ -72,7 +75,10 @@ public class AppointmentsListViewFragment extends BaseFragment {
 
             //onclick of each item in the recycle view (appointment in the list)
             recyclerViewAdapter.setOnItemClickListener(position -> {
-                navController.navigate(AppointmentsListViewFragmentDirections.actionAppointmentsListViewFragmentToEditAppointmentFragment(position));
+//                navController.navigate(AppointmentsListViewFragmentDirections.actionAppointmentsListViewFragmentToEditAppointmentFragment(position));
+
+                EditAppointmentFragment dialogFragment = EditAppointmentFragment.newInstance(position);
+                dialogFragment.show(requireActivity().getSupportFragmentManager(), "AddNewAppointmentFragment");
             });
         }
     }

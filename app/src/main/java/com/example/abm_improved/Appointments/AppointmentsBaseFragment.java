@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -19,6 +20,7 @@ import com.example.abm_improved.BaseActivity;
 import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 public class AppointmentsBaseFragment extends BaseFragment {
@@ -41,6 +43,13 @@ public class AppointmentsBaseFragment extends BaseFragment {
         nestedNavController = nestedNavHostFragment.getNavController();
         BottomNavigationView navigationView = view.findViewById(R.id.bottom_navigation);
         navigationView.setItemIconTintList(null); //make icons in nav drawer colourful (not grayscale)
+//
+//        navigationView.setOnItemSelectedListener(item -> {
+//            NavOptions navOptions = new NavOptions.Builder().setPopUpTo(item.getItemId(), true).build();
+//            nestedNavController.navigate(item.getItemId(), null, navOptions);
+//            return true;
+//        });
+
         NavigationUI.setupWithNavController(navigationView, nestedNavController);
         handleInnerFragmentsBackButton();
     }
@@ -63,11 +72,10 @@ public class AppointmentsBaseFragment extends BaseFragment {
                         R.id.loginFragment,
                         R.id.appointmentsMonthlyViewFragment,
                         R.id.appointmentsWeeklyViewFragment,
-                        R.id.appointmentsThreeDaysViewFragment,
                         R.id.appointmentsDailyViewFragment,
+                        R.id.appointmentsThreeDaysViewFragment,
                         R.id.appointmentsListViewFragment)
-                        .setOpenableLayout(baseActivity.drawerLayout)
-                        .build();
+                        .setOpenableLayout(baseActivity.drawerLayout).build();
                 baseActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             } else {
                 baseActivity.appBarConfiguration = new AppBarConfiguration.Builder(destination.getId()).build();

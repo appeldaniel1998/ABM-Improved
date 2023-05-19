@@ -98,7 +98,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 R.id.clientsMainFragment,
                 R.id.historyFragment,
                 R.id.cartMainFragment,
-                R.id.loginFragment)
+                R.id.loginFragment,
+                R.id.appointmentsMonthlyViewFragment,
+                R.id.appointmentsWeeklyViewFragment,
+                R.id.appointmentsDailyViewFragment,
+                R.id.appointmentsThreeDaysViewFragment,
+                R.id.appointmentsListViewFragment)
                 .setOpenableLayout(drawerLayout).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);

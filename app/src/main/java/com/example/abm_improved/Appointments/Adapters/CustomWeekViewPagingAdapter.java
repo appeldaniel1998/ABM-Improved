@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.alamkanak.weekview.WeekViewEntity;
 import com.alamkanak.weekview.WeekView;
 import com.example.abm_improved.Appointments.AppointmentsWeeklyViewFragment;
+import com.example.abm_improved.Appointments.Templates.MyWeekView;
 import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.Utils.DateUtils;
 
@@ -32,6 +33,6 @@ public class CustomWeekViewPagingAdapter extends WeekView.PagingAdapter<Appointm
         int startDateInt = DateUtils.calendarToInt(startDate);
         int endDateInt = DateUtils.calendarToInt(endDate);
 
-        submitList(AppointmentsWeeklyViewFragment.getAppointmentsBetweenDated(startDateInt, endDateInt));
+        submitList(MyWeekView.getAppointmentsBetweenDates(startDateInt, endDateInt));
     }
 }

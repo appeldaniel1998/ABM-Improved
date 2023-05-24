@@ -15,7 +15,7 @@ public class BasePopupDialog extends DialogFragment {
         Window window = Objects.requireNonNull(getDialog()).getWindow();
 
         if (window != null) {
-            double scale = getResources().getDisplayMetrics().density; // Get the screen's density scale
+//            double scale = getResources().getDisplayMetrics().density; // Get the screen's density scale
 
             // The offset in pixels to dimension we want to get (width or height)
             int offsetWidth = getResources().getDisplayMetrics().widthPixels;

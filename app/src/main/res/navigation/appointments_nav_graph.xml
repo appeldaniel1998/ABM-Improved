@@ -23,7 +23,7 @@
         android:id="@+id/appointmentsWeeklyViewFragment"
         android:name="com.example.abm_improved.Appointments.AppointmentsWeeklyViewFragment"
         android:label="Appointments"
-        tools:layout="@layout/fragment_appointments_weekly_view"
+        tools:layout="@layout/fragment_appointments_weekly_3days_daily_view"
         app:launchSingleTop="true">
         <action
             android:id="@+id/action_appointmentsWeeklyViewFragment_to_editAppointmentFragment"

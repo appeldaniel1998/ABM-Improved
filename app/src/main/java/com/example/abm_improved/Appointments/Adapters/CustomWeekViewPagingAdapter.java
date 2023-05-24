@@ -51,7 +51,7 @@ public class CustomWeekViewPagingAdapter extends WeekView.PagingAdapter<Appointm
         int hour = time.get(Calendar.HOUR_OF_DAY); // get the hour of the day
         int minute = time.get(Calendar.MINUTE); // get the minute of the day
         AddNewAppointmentFragment dialogFragment = AddNewAppointmentFragment.newInstance(year, month, day, hour, minute);
-        dialogFragment.show(currActivity.getSupportFragmentManager(), "AddNewAppointmentFragment");
+        dialogFragment.show(currActivity.getSupportFragmentManager(), "AddNewAppointmentFragment"); // open popup window
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CustomWeekViewPagingAdapter extends WeekView.PagingAdapter<Appointm
         super.onEventClick(data);
 
         EditAppointmentFragment dialogFragment = EditAppointmentFragment.newInstance(data.getUid());
-        dialogFragment.show(currActivity.getSupportFragmentManager(), "AddNewAppointmentFragment");
+        dialogFragment.show(currActivity.getSupportFragmentManager(), "AddNewAppointmentFragment"); // open popup window
     }
 
     @Override

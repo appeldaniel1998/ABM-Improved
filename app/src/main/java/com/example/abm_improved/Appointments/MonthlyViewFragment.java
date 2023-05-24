@@ -15,7 +15,7 @@ import com.example.abm_improved.BaseFragment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DateUtils;
 
-public class AppointmentsMonthlyViewFragment extends BaseFragment {
+public class MonthlyViewFragment extends BaseFragment {
 
     private DatePicker calendar;
     private Button addAppointmentButton;
@@ -30,7 +30,7 @@ public class AppointmentsMonthlyViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appointments_main, container, false);
 
-        navController = NavHostFragment.findNavController(AppointmentsMonthlyViewFragment.this);
+        navController = NavHostFragment.findNavController(MonthlyViewFragment.this);
 
         calendar = view.findViewById(R.id.calendar);
         addAppointmentButton = view.findViewById(R.id.add_appointment_button);

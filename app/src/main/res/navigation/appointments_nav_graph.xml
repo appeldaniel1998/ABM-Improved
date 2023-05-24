@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/appointmentsListViewFragment"
-        android:name="com.example.abm_improved.Appointments.AppointmentsListViewFragment"
+        android:name="com.example.abm_improved.Appointments.ListViewFragment"
         android:label="Appointments"
         tools:layout="@layout/fragment_appointments_list_view"
         app:launchSingleTop="true">
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/appointmentsWeeklyViewFragment"
-        android:name="com.example.abm_improved.Appointments.AppointmentsWeeklyViewFragment"
+        android:name="com.example.abm_improved.Appointments.WeeklyViewFragment"
         android:label="Appointments"
         tools:layout="@layout/fragment_appointments_weekly_3days_daily_view"
         app:launchSingleTop="true">
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/appointmentsMonthlyViewFragment"
-        android:name="com.example.abm_improved.Appointments.AppointmentsMonthlyViewFragment"
+        android:name="com.example.abm_improved.Appointments.MonthlyViewFragment"
         android:label="Appointments"
         tools:layout="@layout/fragment_appointments_main"
         app:launchSingleTop="true">
@@ -74,12 +74,12 @@
     </fragment>
     <fragment
         android:id="@+id/appointmentsThreeDaysViewFragment"
-        android:name="com.example.abm_improved.Appointments.AppointmentsThreeDaysViewFragment"
+        android:name="com.example.abm_improved.Appointments.ThreeDaysViewFragment"
         android:label="Appointments"
         tools:layout="@layout/fragment_appointments_three_days_view" />
     <fragment
         android:id="@+id/appointmentsDailyViewFragment"
-        android:name="com.example.abm_improved.Appointments.AppointmentsDailyViewFragment"
+        android:name="com.example.abm_improved.Appointments.DailyViewFragment"
         android:label="Appointments"
         tools:layout="@layout/fragment_appointments_daily_view" />
 </navigation>

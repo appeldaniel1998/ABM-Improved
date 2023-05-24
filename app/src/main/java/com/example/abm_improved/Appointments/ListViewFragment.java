@@ -21,7 +21,7 @@ import com.example.abm_improved.Utils.DatabaseUtils;
 import com.example.abm_improved.Utils.Interfaces;
 import com.example.abm_improved.Utils.DateUtils;
 
-public class AppointmentsListViewFragment extends BaseFragment {
+public class ListViewFragment extends BaseFragment {
 
     private Button addAppointmentButton;
 
@@ -36,7 +36,7 @@ public class AppointmentsListViewFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_appointments_list_view, container, false);
 
-        navController = NavHostFragment.findNavController(AppointmentsListViewFragment.this);
+        navController = NavHostFragment.findNavController(ListViewFragment.this);
 
         progressBar = requireActivity().findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
@@ -75,8 +75,6 @@ public class AppointmentsListViewFragment extends BaseFragment {
 
             //onclick of each item in the recycle view (appointment in the list)
             recyclerViewAdapter.setOnItemClickListener(position -> {
-//                navController.navigate(AppointmentsListViewFragmentDirections.actionAppointmentsListViewFragmentToEditAppointmentFragment(position));
-
                 EditAppointmentFragment dialogFragment = EditAppointmentFragment.newInstance(position);
                 dialogFragment.show(requireActivity().getSupportFragmentManager(), "AddNewAppointmentFragment");
             });

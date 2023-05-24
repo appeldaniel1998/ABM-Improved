@@ -37,6 +37,13 @@ public class PopupTimePicker {
         return hourString + ":" + minuteString;
     }
 
+    public static String getTimeString(int hour, int minute) {
+        String hourString = hour < 10 ? "0" + hour : "" + hour;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+
+        return hourString + ":" + minuteString;
+    }
+
     public static void setCurrentTime(TextView appointmentTimeTextView) {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);

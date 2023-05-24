@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.alamkanak.weekview.WeekView;
 import com.example.abm_improved.Appointments.Adapters.CustomWeekViewPagingAdapter;
-import com.example.abm_improved.Appointments.AppointmentsWeeklyViewFragment;
 import com.example.abm_improved.DataClasses.Appointment;
 import com.example.abm_improved.R;
 import com.example.abm_improved.Utils.DatabaseUtils;
@@ -37,13 +36,15 @@ public class MyWeekView {
         this.currActivity = currActivity;
         this.currNumberOfDays = numOfDays;
         weekView = view.findViewById(R.id.weekView);
-        weekViewPagingAdapter = new CustomWeekViewPagingAdapter();
+        weekViewPagingAdapter = new CustomWeekViewPagingAdapter(this.currActivity);
         weekView.setAdapter(weekViewPagingAdapter); // Set the adapter for the week view
 
         // header styling ------------------------------------------------------>
         weekView.setShowHeaderBottomLine(true); // Show the line at the bottom of the header
         weekView.setShowHeaderBottomShadow(true);
         // <-------------------------------------------------------------------
+
+        weekView.setVerticalScrollBarEnabled(true); // Enable vertical scroll bar
 
         if (numOfDays == WEEKLY_CALENDAR) {
             // scroll to first day (sunday) of the current week ----------------->
@@ -93,12 +94,12 @@ public class MyWeekView {
                     if (e1.getX() - e2.getX() > 150) { // Swipe left (next week)
                         cal.add(Calendar.DATE, currNumberOfDays);
                         weekView.scrollToDate(cal);
-                        return true;
                     } else if (e2.getX() - e1.getX() > 150) { // Swipe right (previous week)
                         cal.add(Calendar.DATE, -currNumberOfDays);
                         weekView.scrollToDate(cal);
-                        return true;
                     }
+
+                    return true;
                 }
                 return super.onFling(e1, e2, velocityX, velocityY);
             }

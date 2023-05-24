@@ -335,4 +335,13 @@ public class DatabaseUtils {
         }
         return -1;
     }
+
+    public static Appointment getAppointmentByUid(String appointmentUid) {
+        for (Appointment currAppointment : appointments) {
+            if (currAppointment.getUid().equals(appointmentUid)) {
+                return currAppointment;
+            }
+        }
+        return null;
+    }
 }

@@ -68,7 +68,7 @@ public class CustomWeekViewPagingAdapter extends WeekView.PagingAdapter<Appointm
     }
 
     @Override
-    public void onEventLongClick(Appointment data) {
+    public void onEventLongClick(Appointment data) { // todo possibly implement
         super.onEventLongClick(data);
     }
 }
